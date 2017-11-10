@@ -13,6 +13,7 @@
 
     <string name="prompt_name">Name</string>
     <string name="prompt_url">URL</string>
-    <string name="prompt_accept">Add webcomic</string>
+    <string name="prompt_add">Add webcomic</string>
+    <string name="prompt_update">Update webcomic</string>
     <string name="title_activity_main">MainActivity</string>
 </resources>

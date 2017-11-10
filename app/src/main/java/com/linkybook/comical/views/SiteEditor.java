@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.R;
+import com.linkybook.comical.data.SiteDB;
 import com.linkybook.comical.data.SiteInfo;
 
 
@@ -27,10 +28,19 @@ public class SiteEditor extends AppCompatActivity {
 
         name = findViewById(R.id.site_name);
         url = findViewById(R.id.site_url);
+        Button submitButton = findViewById(R.id.site_add_button);
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
 
-        Button submitButton = findViewById(R.id.site_add_button);
+        int site_id = getIntent().getIntExtra("id", -1);
+        if(site_id > 0) {
+            SiteInfo existingSite = SiteDB.getAppDatabase(this).siteDao().findSiteById(site_id);
+            name.setText(existingSite.name);
+            url.setText(existingSite.url);
+            submitButton.setText(R.string.prompt_update);
+
+        }
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,6 +48,7 @@ public class SiteEditor extends AppCompatActivity {
                 newSite.name = name.getText().toString();
                 newSite.url = url.getText().toString();
                 svm.addSite(newSite);
+                finish();
             }
         });
     }
