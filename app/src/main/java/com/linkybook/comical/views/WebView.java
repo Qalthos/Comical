@@ -1,23 +1,12 @@
 package com.linkybook.comical.views;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebViewClient;
-import android.widget.ImageButton;
 
 import com.linkybook.comical.R;
-import com.linkybook.comical.data.SiteDB;
-import com.linkybook.comical.data.SiteDao;
+import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
 
 import static com.linkybook.comical.Utils.urlDomain;
@@ -30,13 +19,9 @@ public class WebView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view);
 
-        final SiteDao siteDB = SiteDB.getAppDatabase(this).siteDao();
-        int site_id = getIntent().getIntExtra("id", -1);
-        currentSite = siteDB.findSiteById(site_id);
-
+        currentSite = getIntent().getParcelableExtra("site");
         getSupportActionBar().setTitle(currentSite.name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         android.webkit.WebView mainView = (android.webkit.WebView) findViewById(R.id.main_view);
         //WebSettings webSettings = mainView.getSettings();
@@ -75,10 +60,6 @@ public class WebView extends AppCompatActivity {
     }
 
     private void loadUrl() {
-        if(currentSite.favicon != null) {
-            Drawable d = new BitmapDrawable(getResources(), currentSite.favicon);
-            getSupportActionBar().setIcon(d);
-        }
         getSupportActionBar().setSubtitle(currentSite.url);
         android.webkit.WebView mainView = (android.webkit.WebView) findViewById(R.id.main_view);
         mainView.loadUrl(currentSite.url);

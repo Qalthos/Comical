@@ -32,21 +32,19 @@ public class SiteEditor extends AppCompatActivity {
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
 
-        int site_id = getIntent().getIntExtra("id", -1);
-        if(site_id > 0) {
-            SiteInfo existingSite = SiteDB.getAppDatabase(this).siteDao().findSiteById(site_id);
+        SiteInfo existingSite = getIntent().getParcelableExtra("site");
+        if(existingSite != null) {
             name.setText(existingSite.name);
             url.setText(existingSite.url);
             submitButton.setText(R.string.prompt_update);
-
         }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SiteInfo newSite = new SiteInfo();
-                newSite.name = name.getText().toString();
-                newSite.url = url.getText().toString();
+                String name_s = name.getText().toString();
+                String url_s = url.getText().toString();
+                SiteInfo newSite = new SiteInfo(name_s, url_s);
                 svm.addSite(newSite);
                 finish();
             }
@@ -57,4 +55,3 @@ public class SiteEditor extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
-
