@@ -18,7 +18,7 @@ import static com.linkybook.comical.data.Converters.dateToTimestamp;
 @Entity(tableName = "site",
         indices = {@Index(value = {"name"}, unique = true)}
 )
-public class SiteInfo implements Parcelable {
+public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -45,6 +45,15 @@ public class SiteInfo implements Parcelable {
     public SiteInfo(String name, String url) {
         this.name = name;
         this.url = url;
+    }
+
+    @Override
+    public int compareTo(SiteInfo other) {
+        return other.frecencyValue() - this.frecencyValue();
+    }
+
+    private int frecencyValue() {
+        return (int) (visits * 10000 / (new Date().getTime() - this.lastVisit.getTime()));
     }
 
     // Parcelable methods
