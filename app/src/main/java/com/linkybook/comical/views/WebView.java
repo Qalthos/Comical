@@ -9,6 +9,8 @@ import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
 
+import java.util.Date;
+
 import static com.linkybook.comical.Utils.urlDomain;
 
 public class WebView extends AppCompatActivity {
@@ -36,6 +38,8 @@ public class WebView extends AppCompatActivity {
                 if(prospectDomain.equals(currentDomain)) {
                     currentSite.url = url;
                     currentSite.favicon = view.getFavicon();
+                    currentSite.lastVisit = new Date();
+                    currentSite.visits++;
                     WebView.this.svm.addSite(currentSite);
                     loadUrl();
                     return true;

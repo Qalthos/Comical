@@ -1,5 +1,6 @@
 package com.linkybook.comical.data;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
@@ -8,8 +9,11 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 import static com.linkybook.comical.data.Converters.base64ToBitmap;
 import static com.linkybook.comical.data.Converters.bitmapToBase64;
+import static com.linkybook.comical.data.Converters.dateToTimestamp;
 
 @Entity(tableName = "site",
         indices = {@Index(value = {"name"}, unique = true)}
@@ -24,10 +28,17 @@ public class SiteInfo implements Parcelable {
 
     public Bitmap favicon;
 
-    public SiteInfo(String name, String url, Bitmap favicon) {
+    public int visits = 0;
+
+    @ColumnInfo(name = "last_visit")
+    public Date lastVisit = new Date(0);
+
+    public SiteInfo(String name, String url, Bitmap favicon, int visits, Date lastVisit) {
         this.name = name;
         this.url = url;
         this.favicon = favicon;
+        this.visits = visits;
+        this.lastVisit = lastVisit;
     }
 
     @Ignore
@@ -45,14 +56,18 @@ public class SiteInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         String b64Icon = bitmapToBase64(favicon);
-        String[] data = {name, url, b64Icon);
+        String date = String.valueOf(dateToTimestamp(lastVisit));
+        String[] data = {name, url, b64Icon, String.valueOf(visits), date};
         out.writeStringArray(data);
     }
 
     public static final Parcelable.Creator<SiteInfo> CREATOR = new Parcelable.Creator<SiteInfo>() {
         public SiteInfo createFromParcel(Parcel in) {
             String[] data = in.createStringArray();
-            return new SiteInfo(data[0], data[1], base64ToBitmap(data[2]));
+            Date date = new Date(Long.parseLong(data[4]));
+            return new SiteInfo(
+                    data[0], data[1], base64ToBitmap(data[2]), Integer.parseInt(data[3]), date
+            );
         }
 
         public SiteInfo[] newArray(int size) {
