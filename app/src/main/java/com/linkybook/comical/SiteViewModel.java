@@ -23,6 +23,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
 import com.linkybook.comical.data.SiteDB;
 import com.linkybook.comical.data.SiteInfo;
 
@@ -42,8 +43,18 @@ public class SiteViewModel extends AndroidViewModel {
         return siteList;
     }
 
-    public void addOrUpdateSite(final SiteInfo site) {
-        new addAsyncTask(siteDB).execute(site);
+    public String exportToJson() {
+        Gson gson = new Gson();
+        return gson.toJson(siteList.getValue());
+    }
+
+    public void importFromJson(String json) {
+        Gson gson = new Gson();
+        addOrUpdateSite(gson.fromJson(json, SiteInfo[].class));
+    }
+
+    public void addOrUpdateSite(final SiteInfo... sites) {
+        new addAsyncTask(siteDB).execute(sites);
     }
 
     public void deleteSite(SiteInfo site) {
