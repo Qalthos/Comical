@@ -1,6 +1,8 @@
 package com.linkybook.comical.views;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebViewClient;
@@ -42,10 +44,12 @@ public class WebView extends AppCompatActivity {
                     currentSite.visits++;
                     WebView.this.svm.addSite(currentSite);
                     loadUrl();
-                    return true;
                 } else {
-                    return false;
+                    // Let the browser handle it.
+                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 }
+
+                return true;
             }
         });
 
@@ -70,6 +74,5 @@ public class WebView extends AppCompatActivity {
         getSupportActionBar().setSubtitle(currentSite.url);
         android.webkit.WebView mainView = (android.webkit.WebView) findViewById(R.id.main_view);
         mainView.loadUrl(currentSite.url);
-
     }
 }
