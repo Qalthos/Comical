@@ -1,3 +1,21 @@
+/*
+ * Comical: An Android webcomic manager
+ * Copyright (C) 2017  Nathaniel Case
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.linkybook.comical.data;
 
 import android.arch.persistence.room.ColumnInfo;
@@ -10,6 +28,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.JsonAdapter;
 
 import java.util.Date;
 
@@ -24,6 +43,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     public String url;
 
+    @JsonAdapter(Serializers.class)
     public Bitmap favicon;
 
     public int visits = 0;
