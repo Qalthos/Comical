@@ -9,11 +9,9 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
+import com.google.gson.Gson;
 
-import static com.linkybook.comical.data.Converters.base64ToBitmap;
-import static com.linkybook.comical.data.Converters.bitmapToBase64;
-import static com.linkybook.comical.data.Converters.dateToTimestamp;
+import java.util.Date;
 
 @Entity(tableName = "site",
         indices = {@Index(value = {"name"}, unique = true)}
@@ -33,12 +31,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @ColumnInfo(name = "last_visit")
     public Date lastVisit = new Date(0);
 
-    public SiteInfo(String name, String url, Bitmap favicon, int visits, Date lastVisit) {
-        this.name = name;
-        this.url = url;
-        this.favicon = favicon;
-        this.visits = visits;
-        this.lastVisit = lastVisit;
+    public SiteInfo() {
     }
 
     @Ignore
@@ -68,19 +61,14 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        String b64Icon = bitmapToBase64(favicon);
-        String date = String.valueOf(dateToTimestamp(lastVisit));
-        String[] data = {name, url, b64Icon, String.valueOf(visits), date};
-        out.writeStringArray(data);
+        Gson gson = new Gson();
+        out.writeString(gson.toJson(this));
     }
 
     public static final Parcelable.Creator<SiteInfo> CREATOR = new Parcelable.Creator<SiteInfo>() {
         public SiteInfo createFromParcel(Parcel in) {
-            String[] data = in.createStringArray();
-            Date date = new Date(Long.parseLong(data[4]));
-            return new SiteInfo(
-                    data[0], data[1], base64ToBitmap(data[2]), Integer.parseInt(data[3]), date
-            );
+            Gson gson = new Gson();
+            return gson.fromJson(in.readString(), SiteInfo.class);
         }
 
         public SiteInfo[] newArray(int size) {

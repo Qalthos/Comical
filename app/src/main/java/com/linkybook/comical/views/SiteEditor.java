@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.R;
-import com.linkybook.comical.data.SiteDB;
 import com.linkybook.comical.data.SiteInfo;
 
 
