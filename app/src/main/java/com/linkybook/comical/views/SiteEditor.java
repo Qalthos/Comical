@@ -59,7 +59,7 @@ public class SiteEditor extends AppCompatActivity {
                 public void onClick(View view) {
                     existingSite.name = name.getText().toString();
                     existingSite.url = url.getText().toString();
-                    svm.addSite(existingSite);
+                    svm.addOrUpdateSite(existingSite);
                     finish();
                 }
             });
@@ -70,7 +70,7 @@ public class SiteEditor extends AppCompatActivity {
                     String name_s = name.getText().toString();
                     String url_s = url.getText().toString();
                     SiteInfo newSite = new SiteInfo(name_s, url_s);
-                    svm.addSite(newSite);
+                    svm.addOrUpdateSite(newSite);
                     finish();
                 }
             });
