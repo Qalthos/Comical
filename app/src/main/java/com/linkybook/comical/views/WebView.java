@@ -12,12 +12,15 @@ import com.linkybook.comical.data.SiteInfo;
 import static com.linkybook.comical.Utils.urlDomain;
 
 public class WebView extends AppCompatActivity {
+    private SiteViewModel svm;
     public static SiteInfo currentSite = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view);
+
+        svm = ViewModelProviders.of(this).get(SiteViewModel.class);
 
         currentSite = getIntent().getParcelableExtra("site");
         getSupportActionBar().setTitle(currentSite.name);
@@ -33,7 +36,7 @@ public class WebView extends AppCompatActivity {
                 if(prospectDomain.equals(currentDomain)) {
                     currentSite.url = url;
                     currentSite.favicon = view.getFavicon();
-                    siteDB.updateSites(currentSite);
+                    WebView.this.svm.addSite(currentSite);
                     loadUrl();
                     return true;
                 } else {
