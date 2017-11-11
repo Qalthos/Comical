@@ -1,3 +1,21 @@
+/*
+ * Comical: An Android webcomic manager
+ * Copyright (C) 2017  Nathaniel Case
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.linkybook.comical.views;
 
 import android.arch.lifecycle.Observer;
@@ -16,6 +34,7 @@ import android.view.View;
 import com.linkybook.comical.R;
 import com.linkybook.comical.RecyclerViewAdapter;
 import com.linkybook.comical.SiteViewModel;
+import com.linkybook.comical.Utils;
 import com.linkybook.comical.data.SiteInfo;
 
 import java.util.ArrayList;
@@ -60,7 +79,17 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_import:
+                Utils.importFromFile(SitePickerView.this);
+                break;
+            case R.id.action_export:
+                Utils.exportToFile(SitePickerView.this);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     @Override
