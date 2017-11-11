@@ -67,7 +67,7 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         SiteInfo site = (SiteInfo) v.getTag();
         Intent intent = new Intent(this, WebView.class);
-        intent.putExtra("id", site.id);
+        intent.putExtra("site", site);
         startActivity(intent);
     }
 
@@ -75,7 +75,7 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
     public boolean onLongClick(View v) {
         SiteInfo site = (SiteInfo) v.getTag();
         Intent intent = new Intent(this, SiteEditor.class);
-        intent.putExtra("id", site.id);
+        intent.putExtra("site", site);
         startActivity(intent);
         return true;
     }

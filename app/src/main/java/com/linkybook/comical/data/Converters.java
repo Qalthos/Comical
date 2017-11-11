@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 
 class Converters {
     @TypeConverter
@@ -24,4 +25,19 @@ class Converters {
         byte[] imageData = baos.toByteArray();
         return Base64.encodeToString(imageData, Base64.DEFAULT);
     }
+
+    @TypeConverter
+    public static Date fromTimestamp(Long value) {
+        return value == null ? null : new Date(value);
+    }
+
+    @TypeConverter
+    public static Long dateToTimestamp(Date date) {
+        if (date == null) {
+            return null;
+        } else {
+            return date.getTime();
+        }
+    }
+
 }

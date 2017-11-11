@@ -24,12 +24,15 @@ public class SiteViewModel extends AndroidViewModel {
         return siteList;
     }
 
-    public void addSite(final SiteInfo borrowModel) {
-        new addAsyncTask(siteDB).execute(borrowModel);
+    public void addSite(final SiteInfo site) {
+        new addAsyncTask(siteDB).execute(site);
+    }
+
+    public void deleteSite(SiteInfo site) {
+        new deleteAsyncTask(siteDB).execute(site);
     }
 
     private static class addAsyncTask extends AsyncTask<SiteInfo, Void, Void> {
-
         private SiteDB db;
 
         addAsyncTask(SiteDB appDatabase) {
@@ -39,6 +42,20 @@ public class SiteViewModel extends AndroidViewModel {
         @Override
         protected Void doInBackground(final SiteInfo... params) {
             db.siteDao().insertAll(params);
+            return null;
+        }
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<SiteInfo, Void, Void> {
+        private SiteDB db;
+
+        deleteAsyncTask(SiteDB appDatabase) {
+            db = appDatabase;
+        }
+
+        @Override
+        protected Void doInBackground(final SiteInfo... params) {
+            db.siteDao().delete(params[0]);
             return null;
         }
 

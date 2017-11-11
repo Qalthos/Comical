@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.linkybook.comical.data.SiteInfo;
 
+import java.util.Collections;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
@@ -60,6 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public void addItems(List<SiteInfo> siteList) {
+        Collections.sort(siteList);
         this.siteList = siteList;
         notifyDataSetChanged();
     }
