@@ -53,7 +53,11 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     }
 
     public int frecencyValue() {
-        return (int) (visits * 1e9 / (new Date().getTime() - this.lastVisit.getTime()));
+        // Time difference in ms
+        long timeDeltaMS = new Date().getTime() - this.lastVisit.getTime();
+        // Convert ms to h
+        int timeDeltaH = (int) Math.max(Math.ceil(timeDeltaMS / (1000 * 60 * 60)), 1d);
+        return visits / timeDeltaH;
     }
 
     // Parcelable methods
