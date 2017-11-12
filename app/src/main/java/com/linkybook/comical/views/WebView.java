@@ -109,14 +109,10 @@ public class WebView extends AppCompatActivity {
         mainView.loadUrl(currentSite.url);
 
         // Update share intent
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("plain/text");
-        shareIntent.putExtra(Intent.EXTRA_STREAM, currentSite.url);
-        setShareIntent(shareIntent);
-    }
-
-    private void setShareIntent(Intent shareIntent) {
         if(share != null) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, currentSite.url);
             share.setShareIntent(shareIntent);
         }
     }
