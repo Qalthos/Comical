@@ -22,7 +22,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebViewClient;
 
 import com.linkybook.comical.R;
@@ -35,6 +39,7 @@ import static com.linkybook.comical.Utils.urlDomain;
 
 public class WebView extends AppCompatActivity {
     private SiteViewModel svm;
+    private ShareActionProvider share;
     public static SiteInfo currentSite = null;
 
     @Override
@@ -70,8 +75,18 @@ public class WebView extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.web_menu, menu);
+
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        share = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
 
         loadUrl();
+
+        return true;
     }
 
     @Override
@@ -92,5 +107,17 @@ public class WebView extends AppCompatActivity {
         getSupportActionBar().setSubtitle(currentSite.url);
         android.webkit.WebView mainView = (android.webkit.WebView) findViewById(R.id.main_view);
         mainView.loadUrl(currentSite.url);
+
+        // Update share intent
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("plain/text");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, currentSite.url);
+        setShareIntent(shareIntent);
+    }
+
+    private void setShareIntent(Intent shareIntent) {
+        if(share != null) {
+            share.setShareIntent(shareIntent);
+        }
     }
 }
