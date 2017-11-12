@@ -22,6 +22,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ import com.linkybook.comical.data.SiteInfo;
 
 public class SiteEditor extends AppCompatActivity {
     private SiteViewModel svm;
+    private SiteInfo existingSite;
 
     EditText name;
     EditText url;
@@ -48,33 +51,43 @@ public class SiteEditor extends AppCompatActivity {
         Button submitButton = findViewById(R.id.site_add_button);
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
+        existingSite = getIntent().getParcelableExtra("site");
 
-        final SiteInfo existingSite = getIntent().getParcelableExtra("site");
         if(existingSite != null) {
             name.setText(existingSite.name);
             url.setText(existingSite.url);
             submitButton.setText(R.string.prompt_update);
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    existingSite.name = name.getText().toString();
-                    existingSite.url = url.getText().toString();
-                    svm.addOrUpdateSite(existingSite);
-                    finish();
-                }
-            });
-        } else {
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String name_s = name.getText().toString();
-                    String url_s = url.getText().toString();
-                    SiteInfo newSite = new SiteInfo(name_s, url_s);
-                    svm.addOrUpdateSite(newSite);
-                    finish();
-                }
-            });
         }
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SiteInfo site = existingSite == null ? new SiteInfo() : existingSite;
+                site.name = name.getText().toString();
+                site.url = url.getText().toString();
+                svm.addOrUpdateSite(site);
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                svm.deleteSite(SiteEditor.this.existingSite);
+                finish();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     private void setupActionBar() {
