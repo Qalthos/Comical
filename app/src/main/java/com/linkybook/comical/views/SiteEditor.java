@@ -74,6 +74,9 @@ public class SiteEditor extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu, menu);
+        if(existingSite != null) {
+            menu.findItem(R.id.action_delete).setVisible(true);
+        }
         return true;
     }
 
