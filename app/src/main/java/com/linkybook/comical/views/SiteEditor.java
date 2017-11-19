@@ -22,6 +22,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,9 +55,24 @@ public class SiteEditor extends AppCompatActivity {
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
         existingSite = getIntent().getParcelableExtra("site");
 
-        if(existingSite != null) {
-            name.setText(existingSite.name);
-            url.setText(existingSite.url);
+        if(existingSite == null) {
+            // Only adding on new sites so existing url doesn't get clobbered
+            name.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    String name = editable.toString().toLowerCase().replaceAll("[^a-z]", "");
+                    SiteEditor.this.url.setText("http://www." + name + ".com");
+                }
+            });
+        } else {
+            name.setText(site.name);
+            url.setText(site.url);
             submitButton.setText(R.string.prompt_update);
         }
 
