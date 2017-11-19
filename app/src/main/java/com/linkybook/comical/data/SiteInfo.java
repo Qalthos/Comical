@@ -51,13 +51,16 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @ColumnInfo(name = "last_visit")
     public Date lastVisit = new Date(0);
 
+    public boolean favorite = false;
+
     public SiteInfo() {
     }
 
     @Ignore
-    public SiteInfo(String name, String url) {
+    public SiteInfo(String name, String url, boolean favorite) {
         this.name = name;
         this.url = url;
+        this.favorite = favorite;
     }
 
     @Override
