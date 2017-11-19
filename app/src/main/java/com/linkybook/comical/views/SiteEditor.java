@@ -37,7 +37,7 @@ import com.linkybook.comical.data.SiteInfo;
 
 public class SiteEditor extends AppCompatActivity {
     private SiteViewModel svm;
-    private SiteInfo existingSite;
+    private SiteInfo site;
 
     EditText name;
     EditText url;
@@ -53,9 +53,11 @@ public class SiteEditor extends AppCompatActivity {
         Button submitButton = findViewById(R.id.site_add_button);
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
-        existingSite = getIntent().getParcelableExtra("site");
+        site = getIntent().getParcelableExtra("site");
 
-        if(existingSite == null) {
+        if(site == null) {
+            site = new SiteInfo();
+
             // Only adding on new sites so existing url doesn't get clobbered
             name.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -79,7 +81,6 @@ public class SiteEditor extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SiteInfo site = existingSite == null ? new SiteInfo() : existingSite;
                 site.name = name.getText().toString();
                 site.url = url.getText().toString();
                 svm.addOrUpdateSite(site);
@@ -91,7 +92,7 @@ public class SiteEditor extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu, menu);
-        if(existingSite != null) {
+        if(site.name != null) {
             menu.findItem(R.id.action_delete).setVisible(true);
         }
         return true;
@@ -99,9 +100,11 @@ public class SiteEditor extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SiteInfo site = SiteEditor.this.site;
+
         switch (item.getItemId()) {
             case R.id.action_delete:
-                svm.deleteSite(SiteEditor.this.existingSite);
+                svm.deleteSite(site);
                 finish();
                 break;
             default:
