@@ -40,7 +40,7 @@ import static com.linkybook.comical.Utils.urlDomain;
 public class WebView extends AppCompatActivity {
     private SiteViewModel svm;
     private ShareActionProvider share;
-    public static SiteInfo currentSite = null;
+    private SiteInfo currentSite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +81,34 @@ public class WebView extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.web_menu, menu);
 
+        if(WebView.this.currentSite.favorite == true) {
+            menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
+        }
+
         MenuItem shareItem = menu.findItem(R.id.action_share);
         share = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
 
         loadUrl();
 
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                SiteInfo site = WebView.this.currentSite;
+                site.favorite = !site.favorite;
+                if(site.favorite == true) {
+                    item.setIcon(R.drawable.ic_favorite_black_24dp);
+                } else {
+                    item.setIcon(R.drawable.ic_favorite_border_black_24dp);
+                }
+                WebView.this.svm.addOrUpdateSite(site);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
         return true;
     }
 
