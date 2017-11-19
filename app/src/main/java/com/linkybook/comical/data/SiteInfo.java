@@ -65,7 +65,12 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     @Override
     public int compareTo(SiteInfo other) {
-        return other.frecencyValue() - this.frecencyValue();
+        int favdiff = Boolean.compare(other.favorite, this.favorite);
+        if(favdiff != 0) {
+            return favdiff;
+        } else {
+            return other.frecencyValue() - this.frecencyValue();
+        }
     }
 
     public int frecencyValue() {
