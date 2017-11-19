@@ -92,6 +92,9 @@ public class SiteEditor extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu, menu);
+        if(site.favorite == true) {
+            menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
+        }
         if(site.name != null) {
             menu.findItem(R.id.action_delete).setVisible(true);
         }
@@ -103,6 +106,14 @@ public class SiteEditor extends AppCompatActivity {
         SiteInfo site = SiteEditor.this.site;
 
         switch (item.getItemId()) {
+            case R.id.action_favorite:
+                site.favorite = !site.favorite;
+                if(site.favorite == true) {
+                    item.setIcon(R.drawable.ic_favorite_black_24dp);
+                } else {
+                    item.setIcon(R.drawable.ic_favorite_border_black_24dp);
+                }
+                break;
             case R.id.action_delete:
                 svm.deleteSite(site);
                 finish();
