@@ -47,12 +47,16 @@ public class WebViewActivity extends AppCompatActivity {
     private SiteInfo currentSite;
 
     private ProgressBar progressBar;
+    private SwipeRefreshLayout srl;
+    private WebView mainView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view);
         progressBar = findViewById(R.id.bar);
+        srl = findViewById(R.id.swipe_refresh);
+        mainView = findViewById(R.id.main_view);
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
 
@@ -60,7 +64,6 @@ public class WebViewActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(currentSite.name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        WebView mainView = findViewById(R.id.main_view);
         //WebSettings webSettings = mainView.getSettings();
         //webSettings.setJavaScriptEnabled(true);
         mainView.setWebViewClient(new WebViewClient() {
@@ -81,6 +84,11 @@ public class WebViewActivity extends AppCompatActivity {
 
                 return true;
             }
+
+            public void onPageFinished(WebView view, String url) {
+                // Clear refresh spinner if necessary
+                srl.setRefreshing(false);
+            }
         });
 
         mainView.setWebChromeClient(new WebChromeClient() {
@@ -95,10 +103,10 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
-        (SwipeRefreshLayout) findViewById(R.id.swipe_refresh).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                
+                mainView.reload();
             }
         });
     }

@@ -7,12 +7,18 @@
     android:orientation="vertical"
     tools:context="com.linkybook.comical.views.WebViewActivity">
 
-    <WebView
-        android:id="@+id/main_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
-    </WebView>
+        <WebView
+            android:id="@+id/main_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </WebView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/bar"
