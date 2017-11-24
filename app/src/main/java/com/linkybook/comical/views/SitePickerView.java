@@ -95,7 +95,7 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         SiteInfo site = (SiteInfo) v.getTag();
-        Intent intent = new Intent(this, WebView.class);
+        Intent intent = new Intent(this, WebViewActivity.class);
         intent.putExtra("site", site);
         startActivity(intent);
     }

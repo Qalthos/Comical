@@ -23,11 +23,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
@@ -39,7 +41,7 @@ import java.util.Date;
 
 import static com.linkybook.comical.Utils.urlDomain;
 
-public class WebView extends AppCompatActivity {
+public class WebViewActivity extends AppCompatActivity {
     private SiteViewModel svm;
     private ShareActionProvider share;
     private SiteInfo currentSite;
@@ -58,7 +60,7 @@ public class WebView extends AppCompatActivity {
         getSupportActionBar().setTitle(currentSite.name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        android.webkit.WebView mainView = (android.webkit.WebView) findViewById(R.id.main_view);
+        WebView mainView = findViewById(R.id.main_view);
         //WebSettings webSettings = mainView.getSettings();
         //webSettings.setJavaScriptEnabled(true);
         mainView.setWebViewClient(new WebViewClient() {
@@ -70,7 +72,7 @@ public class WebView extends AppCompatActivity {
                     currentSite.favicon = view.getFavicon();
                     currentSite.lastVisit = new Date();
                     currentSite.visits++;
-                    WebView.this.svm.addOrUpdateSite(currentSite);
+                    WebViewActivity.this.svm.addOrUpdateSite(currentSite);
                     loadUrl();
                 } else {
                     // Let the browser handle it.
@@ -90,7 +92,13 @@ public class WebView extends AppCompatActivity {
                 } else if(progress == 100) {
                     progressBar.setVisibility(ProgressBar.GONE);
                 }
-                //WebView.this.setProgress(progress * 1000);
+            }
+        });
+
+        (SwipeRefreshLayout) findViewById(R.id.swipe_refresh).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                
             }
         });
     }
@@ -99,7 +107,7 @@ public class WebView extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.web_menu, menu);
 
-        if(WebView.this.currentSite.favorite == true) {
+        if(WebViewActivity.this.currentSite.favorite == true) {
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
         }
 
@@ -115,14 +123,14 @@ public class WebView extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
-                SiteInfo site = WebView.this.currentSite;
+                SiteInfo site = WebViewActivity.this.currentSite;
                 site.favorite = !site.favorite;
                 if(site.favorite == true) {
                     item.setIcon(R.drawable.ic_favorite_black_24dp);
                 } else {
                     item.setIcon(R.drawable.ic_favorite_border_black_24dp);
                 }
-                WebView.this.svm.addOrUpdateSite(site);
+                WebViewActivity.this.svm.addOrUpdateSite(site);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

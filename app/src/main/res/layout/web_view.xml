@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.linkybook.comical.views.WebView">
+    tools:context="com.linkybook.comical.views.WebViewActivity">
 
     <WebView
         android:id="@+id/main_view"
