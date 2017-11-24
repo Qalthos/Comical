@@ -52,14 +52,17 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public Date lastVisit = new Date(0);
 
     public boolean favorite = false;
+    @ColumnInfo(name = "regex")
+    public String urlRegex;
 
     public SiteInfo() {
     }
 
     @Ignore
-    public SiteInfo(String name, String url, boolean favorite) {
+    public SiteInfo(String name, String url, String regex, boolean favorite) {
         this.name = name;
         this.url = url;
+        this.urlRegex = regex;
         this.favorite = favorite;
     }
 
@@ -103,5 +106,4 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
             return new SiteInfo[size];
         }
     };
-
 }

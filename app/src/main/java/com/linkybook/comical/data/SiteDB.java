@@ -8,7 +8,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 
-@Database(entities = {SiteInfo.class}, version = 3)
+@Database(entities = {SiteInfo.class}, version = 4)
 @TypeConverters({Converters.class})
 public abstract class SiteDB extends RoomDatabase {
     private static SiteDB INSTANCE;
@@ -41,6 +41,13 @@ public abstract class SiteDB extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE `site` ADD favorite INTEGER NOT NULL default 0");
+        }
+    };
+
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `site` ADD regex TEXT");
         }
     };
 }

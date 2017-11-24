@@ -41,6 +41,7 @@ public class SiteEditor extends AppCompatActivity {
 
     EditText name;
     EditText url;
+    EditText regex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class SiteEditor extends AppCompatActivity {
 
         name = findViewById(R.id.site_name);
         url = findViewById(R.id.site_url);
+        regex = findViewById(R.id.site_regex);
         Button submitButton = findViewById(R.id.site_add_button);
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
@@ -83,6 +85,7 @@ public class SiteEditor extends AppCompatActivity {
             public void onClick(View view) {
                 site.name = name.getText().toString();
                 site.url = url.getText().toString();
+                site.urlRegex = regex.getText().toString();
                 svm.addOrUpdateSite(site);
                 finish();
             }
