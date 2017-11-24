@@ -55,17 +55,6 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @ColumnInfo(name = "regex")
     public String urlRegex;
 
-    public SiteInfo() {
-    }
-
-    @Ignore
-    public SiteInfo(String name, String url, String regex, boolean favorite) {
-        this.name = name;
-        this.url = url;
-        this.urlRegex = regex;
-        this.favorite = favorite;
-    }
-
     @Override
     public int compareTo(SiteInfo other) {
         int favdiff = Boolean.compare(other.favorite, this.favorite);
