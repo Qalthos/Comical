@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.linkybook.comical.views.WebView">
+
+    <WebView
+        android:id="@+id/main_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+    </WebView>
 
     <ProgressBar
         android:id="@+id/bar"
@@ -16,9 +23,4 @@
         android:layout_marginTop="-7dp"
         android:visibility="visible" />
 
-    <WebView
-        android:id="@+id/main_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</LinearLayout>
+</FrameLayout>
