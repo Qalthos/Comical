@@ -27,7 +27,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebChromeClient;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
@@ -42,10 +44,13 @@ public class WebView extends AppCompatActivity {
     private ShareActionProvider share;
     private SiteInfo currentSite;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view);
+        progressBar = findViewById(R.id.bar);
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
 
@@ -73,6 +78,19 @@ public class WebView extends AppCompatActivity {
                 }
 
                 return true;
+            }
+        });
+
+        mainView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(android.webkit.WebView view, int progress) {
+                progressBar.setProgress(progress);
+
+                if(progress < 100 && progressBar.getVisibility() == ProgressBar.GONE) {
+                    progressBar.setVisibility(ProgressBar.VISIBLE);
+                } else if(progress == 100) {
+                    progressBar.setVisibility(ProgressBar.GONE);
+                }
+                //WebView.this.setProgress(progress * 1000);
             }
         });
     }
