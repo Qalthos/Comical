@@ -51,18 +51,26 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @ColumnInfo(name = "last_visit")
     public Date lastVisit = new Date(0);
 
+    public boolean favorite = false;
+
     public SiteInfo() {
     }
 
     @Ignore
-    public SiteInfo(String name, String url) {
+    public SiteInfo(String name, String url, boolean favorite) {
         this.name = name;
         this.url = url;
+        this.favorite = favorite;
     }
 
     @Override
     public int compareTo(SiteInfo other) {
-        return other.frecencyValue() - this.frecencyValue();
+        int favdiff = Boolean.compare(other.favorite, this.favorite);
+        if(favdiff != 0) {
+            return favdiff;
+        } else {
+            return other.frecencyValue() - this.frecencyValue();
+        }
     }
 
     public int frecencyValue() {

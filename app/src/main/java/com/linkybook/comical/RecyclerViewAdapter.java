@@ -38,6 +38,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.name.setText(site.name);
         holder.url.setText(site.url);
         holder.icon.setImageBitmap(site.favicon);
+        if(site.favorite == true) {
+            holder.fav.setText("♥");
+        } else {
+            holder.fav.setText("");
+        }
 
         /*if(site.favicon != null) {
             Palette p = Palette.from(site.favicon).generate();
@@ -69,6 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     static class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
         private TextView url;
+        private TextView fav;
         private ImageView icon;
 
         RecyclerViewHolder(View view) {
@@ -76,6 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             name = (TextView) view.findViewById(R.id.card_name);
             url = (TextView) view.findViewById(R.id.card_url);
             icon = (ImageView) view.findViewById(R.id.card_icon);
+            fav = (TextView) view.findViewById(R.id.card_favorite);
         }
     }
 }

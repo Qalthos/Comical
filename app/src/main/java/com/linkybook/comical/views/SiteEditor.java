@@ -22,6 +22,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +37,7 @@ import com.linkybook.comical.data.SiteInfo;
 
 public class SiteEditor extends AppCompatActivity {
     private SiteViewModel svm;
-    private SiteInfo existingSite;
+    private SiteInfo site;
 
     EditText name;
     EditText url;
@@ -51,18 +53,34 @@ public class SiteEditor extends AppCompatActivity {
         Button submitButton = findViewById(R.id.site_add_button);
 
         svm = ViewModelProviders.of(this).get(SiteViewModel.class);
-        existingSite = getIntent().getParcelableExtra("site");
+        site = getIntent().getParcelableExtra("site");
 
-        if(existingSite != null) {
-            name.setText(existingSite.name);
-            url.setText(existingSite.url);
+        if(site == null) {
+            site = new SiteInfo();
+
+            // Only adding on new sites so existing url doesn't get clobbered
+            name.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    String name = editable.toString().toLowerCase().replaceAll("[^a-z]", "");
+                    SiteEditor.this.url.setText("http://www." + name + ".com");
+                }
+            });
+        } else {
+            name.setText(site.name);
+            url.setText(site.url);
             submitButton.setText(R.string.prompt_update);
         }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SiteInfo site = existingSite == null ? new SiteInfo() : existingSite;
                 site.name = name.getText().toString();
                 site.url = url.getText().toString();
                 svm.addOrUpdateSite(site);
@@ -74,7 +92,10 @@ public class SiteEditor extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu, menu);
-        if(existingSite != null) {
+        if(site.favorite == true) {
+            menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
+        }
+        if(site.name != null) {
             menu.findItem(R.id.action_delete).setVisible(true);
         }
         return true;
@@ -82,9 +103,19 @@ public class SiteEditor extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SiteInfo site = SiteEditor.this.site;
+
         switch (item.getItemId()) {
+            case R.id.action_favorite:
+                site.favorite = !site.favorite;
+                if(site.favorite == true) {
+                    item.setIcon(R.drawable.ic_favorite_black_24dp);
+                } else {
+                    item.setIcon(R.drawable.ic_favorite_border_black_24dp);
+                }
+                break;
             case R.id.action_delete:
-                svm.deleteSite(SiteEditor.this.existingSite);
+                svm.deleteSite(site);
                 finish();
                 break;
             default:
