@@ -88,6 +88,7 @@ public class WebViewActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 // Clear refresh spinner if necessary
                 srl.setRefreshing(false);
+                getSupportActionBar().setTitle(view.getTitle());
             }
         });
 
