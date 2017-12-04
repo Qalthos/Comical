@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.WebView"
+            android:name=".views.WebViewActivity"
             android:label="@string/app_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
