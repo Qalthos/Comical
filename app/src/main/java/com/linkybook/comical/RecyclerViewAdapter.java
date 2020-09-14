@@ -45,16 +45,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.fav.setText("");
         }
 
-        /*if(site.favicon != null) {
-            Palette p = Palette.from(site.favicon).generate();
+        if(site.favicon != null) {
+            Palette.Builder pb = Palette.from(site.favicon);
+            pb.addTarget(Target.VIBRANT);
+            Palette p = pb.generate();
             Palette.Swatch color = p.getDominantSwatch();
 
-            int[][] states = new int[][] {new int[] { android.R.attr.state_enabled}};
-            int[] fore_colors = new int[] {color.getTitleTextColor()};
-            int[] back_colors = new int[] {color.getRgb()};
-            holder.itemView.setForegroundTintList(new ColorStateList(states, fore_colors));
-            holder.itemView.setBackgroundTintList(new ColorStateList(states, back_colors));
-        }*/
+            holder.name.setTextColor(color.getTitleTextColor());
+            holder.url.setTextColor(color.getBodyTextColor());
+            holder.itemView.setBackgroundColor(color.getRgb());
+        }
 
         holder.itemView.setTag(site);
         holder.itemView.setOnClickListener(clickListener);
