@@ -1,6 +1,6 @@
 package com.linkybook.comical.data;
 
-import android.arch.persistence.room.TypeConverter;
+import androidx.room.TypeConverter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;

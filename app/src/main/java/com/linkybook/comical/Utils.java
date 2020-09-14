@@ -20,10 +20,10 @@ package com.linkybook.comical;
 
 import android.text.TextUtils;
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.widget.Toast;
 
 import java.io.BufferedReader;

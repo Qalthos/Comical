@@ -1,8 +1,9 @@
 package com.linkybook.comical;
 
-import android.content.res.ColorStateList;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.RecyclerView;
+import androidx.palette.graphics.Palette;
+import androidx.palette.graphics.Target;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

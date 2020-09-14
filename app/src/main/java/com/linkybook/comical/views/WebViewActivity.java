@@ -18,14 +18,15 @@
 
 package com.linkybook.comical.views;
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
+import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ShareActionProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
@@ -67,6 +68,7 @@ public class WebViewActivity extends AppCompatActivity {
         //WebSettings webSettings = mainView.getSettings();
         //webSettings.setJavaScriptEnabled(true);
         mainView.setWebViewClient(new WebViewClient() {
+            @Override
             public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
                 String currentDomain = urlDomain(currentSite.url);
                 String prospectDomain = urlDomain(url);
