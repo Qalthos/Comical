@@ -70,6 +70,7 @@ public class Utils {
                 return;
             }
             svm.importFromJson(dataAsJson);
+            Toast.makeText(ctx, "File imported successfully", Toast.LENGTH_LONG).show();
 
         } else {
             Toast.makeText(ctx, "Data is not readable", Toast.LENGTH_LONG).show();
@@ -85,6 +86,7 @@ public class Utils {
                 Writer out = new BufferedWriter(new FileWriter(file));
                 out.write(dataAsJson);
                 out.close();
+                Toast.makeText(ctx, "Successfully exported to " + file.getPath(), Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 Toast.makeText(ctx, "Failed to write file", Toast.LENGTH_LONG).show();
             }
