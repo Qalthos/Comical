@@ -1,14 +1,14 @@
 package com.linkybook.comical;
 
-import androidx.palette.graphics.Palette;
-import androidx.palette.graphics.Target;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.palette.graphics.Palette;
+import androidx.palette.graphics.Target;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.linkybook.comical.data.SiteInfo;
 
@@ -18,8 +18,8 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
     private List<SiteInfo> siteList;
-    private View.OnClickListener clickListener;
-    private View.OnLongClickListener longClickListener;
+    private final View.OnClickListener clickListener;
+    private final View.OnLongClickListener longClickListener;
 
     public RecyclerViewAdapter(List<SiteInfo> siteList, View.OnClickListener clickListener) {
         this.siteList = siteList;
@@ -39,7 +39,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.name.setText(site.name);
         holder.url.setText(site.url);
         holder.icon.setImageBitmap(site.favicon);
-        if(site.favorite == true) {
+        if(site.favorite) {
             holder.fav.setText("♥");
         } else {
             holder.fav.setText("");
@@ -74,10 +74,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        private TextView name;
-        private TextView url;
-        private TextView fav;
-        private ImageView icon;
+        private final TextView name;
+        private final TextView url;
+        private final TextView fav;
+        private final ImageView icon;
 
         RecyclerViewHolder(View view) {
             super(view);

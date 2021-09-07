@@ -18,13 +18,13 @@
 
 package com.linkybook.comical;
 
-import android.text.TextUtils;
-
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
-import androidx.fragment.app.FragmentActivity;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,8 +39,8 @@ import java.util.Arrays;
 
 public class Utils {
     public static String urlDomain(String url) {
-        String[] domainBits = {};
-        int l = 0;
+        String[] domainBits;
+        int l;
         try {
             URI uri = new URI(url);
             domainBits = uri.getHost().split("\\.");
@@ -48,20 +48,27 @@ public class Utils {
         } catch (URISyntaxException e) {
             return "";
         }
-        // TODO: Can't use String.join until API 26
-        return TextUtils.join(".", Arrays.copyOfRange(domainBits, l-2, l));
+        return String.join(".", Arrays.copyOfRange(domainBits, l-2, l));
+    }
+
+    public static String urlDomain(Uri uri) {
+        String[] domainBits;
+        int l;
+        domainBits = uri.getHost().split("\\.");
+        l = domainBits.length;
+        return String.join(".", Arrays.copyOfRange(domainBits, l-2, l));
     }
 
     public static void importFromFile(Context ctx) {
         File file = new File(ctx.getExternalFilesDir(null), "data.json");
         if(isExternalStorageReadable()) {
             SiteViewModel svm = ViewModelProviders.of((FragmentActivity) ctx).get(SiteViewModel.class);
-            String dataAsJson = "";
+            StringBuilder dataAsJson = new StringBuilder();
             try {
                 BufferedReader in = new BufferedReader(new FileReader(file));
                 String line = in.readLine();
                 while(line != null) {
-                    dataAsJson += line;
+                    dataAsJson.append(line);
                     line = in.readLine();
                 }
                 in.close();
@@ -69,7 +76,7 @@ public class Utils {
                 Toast.makeText(ctx, "Failed to read file", Toast.LENGTH_LONG).show();
                 return;
             }
-            svm.importFromJson(dataAsJson);
+            svm.importFromJson(dataAsJson.toString());
             Toast.makeText(ctx, "File imported successfully", Toast.LENGTH_LONG).show();
 
         } else {
@@ -99,19 +106,13 @@ public class Utils {
     /* Checks if external storage is available for read and write */
     private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /* Checks if external storage is available to at least read */
     private static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 }

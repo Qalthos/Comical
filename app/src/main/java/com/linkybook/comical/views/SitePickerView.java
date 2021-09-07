@@ -18,20 +18,18 @@
 
 package com.linkybook.comical.views;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.linkybook.comical.R;
 import com.linkybook.comical.RecyclerViewAdapter;
 import com.linkybook.comical.SiteViewModel;
@@ -39,7 +37,6 @@ import com.linkybook.comical.Utils;
 import com.linkybook.comical.data.SiteInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SitePickerView extends AppCompatActivity implements View.OnClickListener,View.OnLongClickListener {
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -50,26 +47,16 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.site_picker);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SitePickerView.this, SiteEditor.class));
-            }
-        });
+        fab.setOnClickListener(view -> startActivity(new Intent(SitePickerView.this, SiteEditor.class)));
 
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler);
-        recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<SiteInfo>(), this);
+        recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<>(), this);
         recycler.setLayoutManager(new LinearLayoutManager(this));
 
         recycler.setAdapter(recyclerViewAdapter);
 
         SiteViewModel svm = ViewModelProviders.of(this).get(SiteViewModel.class);
-        svm.getSiteList().observe(SitePickerView.this, new Observer<List<SiteInfo>>() {
-            @Override
-            public void onChanged(@Nullable List<SiteInfo> siteInfos) {
-                recyclerViewAdapter.addItems(siteInfos);
-            }
-        });
+        svm.getSiteList().observe(SitePickerView.this, siteInfoItems -> recyclerViewAdapter.addItems(siteInfoItems));
     }
 
     @Override
@@ -80,15 +67,12 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_import:
-                Utils.importFromFile(SitePickerView.this);
-                break;
-            case R.id.action_export:
-                Utils.exportToFile(SitePickerView.this);
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+        if(item.getItemId() == R.id.action_import) {
+            Utils.importFromFile(SitePickerView.this);
+        } else if(item.getItemId() == R.id.action_export) {
+            Utils.exportToFile(SitePickerView.this);
+        } else {
+            return super.onOptionsItemSelected(item);
         }
         return true;
     }
