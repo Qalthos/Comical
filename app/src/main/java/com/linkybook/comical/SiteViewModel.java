@@ -19,9 +19,10 @@
 package com.linkybook.comical;
 
 import android.app.Application;
+import android.os.AsyncTask;
+
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.linkybook.comical.data.SiteDB;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class SiteViewModel extends AndroidViewModel {
     private final LiveData<List<SiteInfo>> siteList;
-    private SiteDB siteDB;
+    private final SiteDB siteDB;
 
     public SiteViewModel(Application application) {
         super(application);
@@ -54,39 +55,10 @@ public class SiteViewModel extends AndroidViewModel {
     }
 
     public void addOrUpdateSite(final SiteInfo... sites) {
-        new addAsyncTask(siteDB).execute(sites);
+        AsyncTask.execute(() -> siteDB.siteDao().insertAll(sites));
     }
 
     public void deleteSite(SiteInfo site) {
-        new deleteAsyncTask(siteDB).execute(site);
-    }
-
-    private static class addAsyncTask extends AsyncTask<SiteInfo, Void, Void> {
-        private SiteDB db;
-
-        addAsyncTask(SiteDB appDatabase) {
-            db = appDatabase;
-        }
-
-        @Override
-        protected Void doInBackground(final SiteInfo... params) {
-            db.siteDao().insertAll(params);
-            return null;
-        }
-    }
-
-    private static class deleteAsyncTask extends AsyncTask<SiteInfo, Void, Void> {
-        private SiteDB db;
-
-        deleteAsyncTask(SiteDB appDatabase) {
-            db = appDatabase;
-        }
-
-        @Override
-        protected Void doInBackground(final SiteInfo... params) {
-            db.siteDao().delete(params[0]);
-            return null;
-        }
-
+        AsyncTask.execute(() -> siteDB.siteDao().delete(site));
     }
 }

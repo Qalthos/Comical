@@ -32,7 +32,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.linkybook.comical.data.serializers.BitmapSerializer;
 import com.linkybook.comical.data.serializers.DateSerializer;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Entity(tableName = "site",
         indices = {@Index(value = {"name"}, unique = true)}
@@ -54,24 +55,37 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @JsonAdapter(DateSerializer.class)
     public Date lastVisit;
 
+    @ColumnInfo(name = "decay_date")
+    @JsonAdapter(LocalDateSerializer.class)
+    public LocalDate decayDate;
+
     public boolean favorite = false;
 
     @Override
     public int compareTo(SiteInfo other) {
-        int favdiff = Boolean.compare(other.favorite, this.favorite);
-        if(favdiff != 0) {
-            return favdiff;
-        } else {
-            return other.frecencyValue() - this.frecencyValue();
-        }
+        // Return reverse sorted list by decayDate
+        return -this.decayDate.compareTo(other.decayDate);
     }
 
-    public int frecencyValue() {
-        // Time difference in ms
-        long timeDeltaMS = new Date().getTime() - this.lastVisit.getTime();
-        // Convert ms to h
-        int timeDeltaH = (int) Math.max(Math.ceil(timeDeltaMS / (1000 * 60 * 60)), 1d);
-        return visits / timeDeltaH;
+    public void visit() {
+        double score;
+        double lambda = Math.log(2) / 30;
+        if(this.visits != -1) {
+            score = (float)this.visits;
+            this.visits = -1;
+        } else {
+            // Generate score from decayDate
+            score = Math.exp(lambda * LocalDate.now().until(this.decayDate, ChronoUnit.DAYS));
+        }
+        int visitValue = 2;
+        if(this.favorite){
+            visitValue *= 2;
+        }
+        score += visitValue;
+
+        // Render score back to time-to-score-one
+        this.lastVisit = LocalDate.now();
+        this.decayDate = this.lastVisit.plusDays((int)(Math.log(score) / lambda));
     }
 
     // Parcelable methods

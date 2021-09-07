@@ -21,9 +21,9 @@ public class Converters {
         if(image == null) {
             return "";
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] imageData = baos.toByteArray();
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
+        byte[] imageData = byteStream.toByteArray();
         return Base64.encodeToString(imageData, Base64.DEFAULT);
     }
 

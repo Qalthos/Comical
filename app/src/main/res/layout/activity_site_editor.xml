@@ -21,6 +21,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_name"
+                    android:autofillHints=""
                     android:inputType="textCapWords"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -36,10 +37,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_url"
+                    android:autofillHints=""
                     android:inputType="textUri"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="http://www." />
+                    android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

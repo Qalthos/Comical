@@ -18,29 +18,28 @@
 
 package com.linkybook.comical.views;
 
-import androidx.lifecycle.ViewModelProviders;
+import static com.linkybook.comical.Utils.urlDomain;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ShareActionProvider;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ShareActionProvider;
+import androidx.core.view.MenuItemCompat;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
-
-import java.util.Date;
-
-import static com.linkybook.comical.Utils.urlDomain;
 
 public class WebViewActivity extends AppCompatActivity {
     private SiteViewModel svm;
@@ -65,23 +64,20 @@ public class WebViewActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(currentSite.name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //WebSettings webSettings = mainView.getSettings();
-        //webSettings.setJavaScriptEnabled(true);
         mainView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(android.webkit.WebView view, WebResourceRequest wrq) {
                 String currentDomain = urlDomain(currentSite.url);
-                String prospectDomain = urlDomain(url);
+                String prospectDomain = urlDomain(wrq.getUrl());
                 if(prospectDomain.equals(currentDomain)) {
-                    currentSite.url = url;
+                    currentSite.url = wrq.getUrl().toString();
                     currentSite.favicon = view.getFavicon();
-                    currentSite.lastVisit = new Date();
-                    currentSite.visits++;
+                    currentSite.visit();
                     WebViewActivity.this.svm.addOrUpdateSite(currentSite);
                     loadUrl();
                 } else {
                     // Let the browser handle it.
-                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(wrq.getUrl().toString())));
                 }
 
                 return true;
@@ -106,19 +102,14 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
-        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mainView.reload();
-            }
-        });
+        srl.setOnRefreshListener(() -> mainView.reload());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.web_menu, menu);
 
-        if(WebViewActivity.this.currentSite.favorite == true) {
+        if(WebViewActivity.this.currentSite.favorite) {
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
         }
 
@@ -132,19 +123,17 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_favorite:
-                SiteInfo site = WebViewActivity.this.currentSite;
-                site.favorite = !site.favorite;
-                if(site.favorite == true) {
-                    item.setIcon(R.drawable.ic_favorite_black_24dp);
-                } else {
-                    item.setIcon(R.drawable.ic_favorite_border_black_24dp);
-                }
-                WebViewActivity.this.svm.addOrUpdateSite(site);
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_favorite) {
+            SiteInfo site = WebViewActivity.this.currentSite;
+            site.favorite = !site.favorite;
+            if (site.favorite) {
+                item.setIcon(R.drawable.ic_favorite_black_24dp);
+            } else {
+                item.setIcon(R.drawable.ic_favorite_border_black_24dp);
+            }
+            WebViewActivity.this.svm.addOrUpdateSite(site);
+        } else {
+            return super.onOptionsItemSelected(item);
         }
         return true;
     }
