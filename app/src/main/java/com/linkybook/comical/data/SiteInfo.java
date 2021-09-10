@@ -68,23 +68,25 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     }
 
     public void visit() {
-        double score;
+        this.lastVisit = LocalDate.now();
         double lambda = Math.log(2) / 30;
-        if(this.visits != -1) {
-            score = (float)this.visits;
+        double score;
+
+        if(this.visits > 0) {
+            score = (double)this.visits;
             this.visits = -1;
         } else {
             // Generate score from decayDate
-            score = Math.exp(lambda * LocalDate.now().until(this.decayDate, ChronoUnit.DAYS));
+            score = Math.exp(lambda * this.lastVisit.until(this.decayDate, ChronoUnit.DAYS));
         }
+
         int visitValue = 2;
-        if(this.favorite){
+        if(this.favorite) {
             visitValue *= 2;
         }
         score += visitValue;
 
         // Render score back to time-to-score-one
-        this.lastVisit = LocalDate.now();
         this.decayDate = this.lastVisit.plusDays((int)(Math.log(score) / lambda));
     }
 
