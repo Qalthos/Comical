@@ -24,8 +24,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
@@ -49,7 +50,7 @@ public class SiteEditor extends AppCompatActivity {
         url = findViewById(R.id.site_url);
         Button submitButton = findViewById(R.id.site_add_button);
 
-        svm = ViewModelProviders.of(this).get(SiteViewModel.class);
+        svm = new ViewModelProvider(this).get(SiteViewModel.class);
         site = getIntent().getParcelableExtra("site");
 
         if(site == null) {
@@ -101,6 +102,9 @@ public class SiteEditor extends AppCompatActivity {
     }
 
     private void setupActionBar() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 }

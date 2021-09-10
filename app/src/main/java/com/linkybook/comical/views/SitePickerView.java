@@ -25,7 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,7 +55,7 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
 
         recycler.setAdapter(recyclerViewAdapter);
 
-        SiteViewModel svm = ViewModelProviders.of(this).get(SiteViewModel.class);
+        SiteViewModel svm = new ViewModelProvider(this).get(SiteViewModel.class);
         svm.getSiteList().observe(SitePickerView.this, siteInfoItems -> recyclerViewAdapter.addItems(siteInfoItems));
     }
 

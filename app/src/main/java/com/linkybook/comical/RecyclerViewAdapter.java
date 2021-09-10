@@ -51,10 +51,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             Palette p = pb.generate();
             Palette.Swatch color = p.getDominantSwatch();
 
-            holder.name.setTextColor(color.getTitleTextColor());
-            holder.url.setTextColor(color.getBodyTextColor());
-            holder.fav.setTextColor(color.getBodyTextColor());
-            holder.itemView.setBackgroundColor(color.getRgb());
+            if(color != null) {
+                holder.name.setTextColor(color.getTitleTextColor());
+                holder.url.setTextColor(color.getBodyTextColor());
+                holder.fav.setTextColor(color.getBodyTextColor());
+                holder.itemView.setBackgroundColor(color.getRgb());
+            }
         }
 
         holder.itemView.setTag(site);

@@ -57,7 +57,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     @ColumnInfo(name = "decay_date")
     @JsonAdapter(LocalDateSerializer.class)
-    public LocalDate decayDate;
+    public LocalDate decayDate = LocalDate.now();
 
     public boolean favorite = false;
 

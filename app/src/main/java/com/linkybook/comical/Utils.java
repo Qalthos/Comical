@@ -24,7 +24,7 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -62,7 +62,7 @@ public class Utils {
     public static void importFromFile(Context ctx) {
         File file = new File(ctx.getExternalFilesDir(null), "data.json");
         if(isExternalStorageReadable()) {
-            SiteViewModel svm = ViewModelProviders.of((FragmentActivity) ctx).get(SiteViewModel.class);
+            SiteViewModel svm = new ViewModelProvider((FragmentActivity) ctx).get(SiteViewModel.class);
             StringBuilder dataAsJson = new StringBuilder();
             try {
                 BufferedReader in = new BufferedReader(new FileReader(file));
@@ -87,7 +87,7 @@ public class Utils {
     public static void exportToFile(Context ctx) {
         File file = new File(ctx.getExternalFilesDir(null), "data.json");
         if(isExternalStorageWritable()) {
-            SiteViewModel svm = ViewModelProviders.of((FragmentActivity) ctx).get(SiteViewModel.class);
+            SiteViewModel svm = new ViewModelProvider((FragmentActivity) ctx).get(SiteViewModel.class);
             String dataAsJson = svm.exportToJson();
             try {
                 Writer out = new BufferedWriter(new FileWriter(file));
