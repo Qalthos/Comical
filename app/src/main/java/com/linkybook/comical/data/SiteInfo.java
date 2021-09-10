@@ -29,6 +29,8 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.JsonAdapter;
+import com.linkybook.comical.data.serializers.BitmapSerializer;
+import com.linkybook.comical.data.serializers.LocalDateSerializer;
 
 import java.util.Date;
 
@@ -43,25 +45,16 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     public String url;
 
-    @JsonAdapter(Serializers.class)
+    @JsonAdapter(BitmapSerializer.class)
     public Bitmap favicon;
 
     public int visits = 0;
 
     @ColumnInfo(name = "last_visit")
-    public Date lastVisit = new Date(0);
+    @JsonAdapter(LocalDateSerializer.class)
+    public LocalDate lastVisit;
 
     public boolean favorite = false;
-
-    public SiteInfo() {
-    }
-
-    @Ignore
-    public SiteInfo(String name, String url, boolean favorite) {
-        this.name = name;
-        this.url = url;
-        this.favorite = favorite;
-    }
 
     @Override
     public int compareTo(SiteInfo other) {

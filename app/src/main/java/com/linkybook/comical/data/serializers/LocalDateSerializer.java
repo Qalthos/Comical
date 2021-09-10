@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.linkybook.comical.data;
-
-import android.graphics.Bitmap;
+package com.linkybook.comical.data.serializers;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -26,17 +24,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.linkybook.comical.data.Converters;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 
-public class Serializers implements JsonSerializer<Bitmap>, JsonDeserializer<Bitmap> {
+public class LocalDateSerializer implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
     @Override
-    public JsonElement serialize(Bitmap src, Type typeOfSrc, JsonSerializationContext context) {
-        return new JsonPrimitive(Converters.bitmapToBase64(src));
+    public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(Converters.dateToTimestamp(src));
     }
 
     @Override
-    public Bitmap deserialize(JsonElement src, Type typeOfSrc, JsonDeserializationContext context) {
-        return Converters.base64ToBitmap(src.getAsString());
+    public LocalDate deserialize(JsonElement src, Type typeOfSrc, JsonDeserializationContext context) {
+        return Converters.fromTimestamp(src.getAsLong());
     }
 }

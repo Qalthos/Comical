@@ -6,9 +6,11 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
-class Converters {
+public class Converters {
     @TypeConverter
     public static Bitmap base64ToBitmap(String data) {
         byte[] decodedBytes = Base64.decode(data, Base64.DEFAULT);
@@ -27,17 +29,13 @@ class Converters {
     }
 
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
+    public static LocalDate fromTimestamp(Long value) {
+        return value == null ? null : new Date(value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(Date date) {
-        if (date == null) {
-            return null;
-        } else {
-            return date.getTime();
-        }
+    public static Long dateToTimestamp(LocalDate date) {
+        return date == null ? null : Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
 }
