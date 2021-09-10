@@ -7,6 +7,8 @@ import android.util.Base64;
 import androidx.room.TypeConverter;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class Converters {
@@ -28,13 +30,13 @@ public class Converters {
     }
 
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
+    public static LocalDate fromTimestamp(Long value) {
+        return value == null ? null : new Date(value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(Date date) {
-        return date == null ? null : date.getTime();
+    public static Long dateToTimestamp(LocalDate date) {
+        return date == null ? null : Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
 }
