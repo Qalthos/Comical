@@ -18,19 +18,19 @@
 
 package com.linkybook.comical.data;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.JsonAdapter;
 import com.linkybook.comical.data.serializers.BitmapSerializer;
-import com.linkybook.comical.data.serializers.LocalDateSerializer;
+import com.linkybook.comical.data.serializers.DateSerializer;
 
 import java.util.Date;
 
@@ -51,8 +51,8 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public int visits = 0;
 
     @ColumnInfo(name = "last_visit")
-    @JsonAdapter(LocalDateSerializer.class)
-    public LocalDate lastVisit;
+    @JsonAdapter(DateSerializer.class)
+    public Date lastVisit;
 
     public boolean favorite = false;
 
