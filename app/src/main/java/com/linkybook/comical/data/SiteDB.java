@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {SiteInfo.class}, version = 3)
+@Database(entities = {SiteInfo.class}, version = 4)
 @TypeConverters({Converters.class})
 public abstract class SiteDB extends RoomDatabase {
     private static SiteDB INSTANCE;
@@ -19,7 +19,8 @@ public abstract class SiteDB extends RoomDatabase {
         if (INSTANCE == null) {
             INSTANCE =
                     Room.databaseBuilder(context.getApplicationContext(), SiteDB.class, "site")
-                            .addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3).addMigrations(MIGRATION_3_4)
+                            .addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3)
+                            .addMigrations(MIGRATION_3_4)
                             .build();
         }
         return INSTANCE;

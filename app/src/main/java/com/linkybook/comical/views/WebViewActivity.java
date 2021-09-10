@@ -31,10 +31,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.core.view.MenuItemCompat;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.linkybook.comical.R;
@@ -58,11 +59,14 @@ public class WebViewActivity extends AppCompatActivity {
         srl = findViewById(R.id.swipe_refresh);
         mainView = findViewById(R.id.main_view);
 
-        svm = ViewModelProviders.of(this).get(SiteViewModel.class);
+        svm = new ViewModelProvider(this).get(SiteViewModel.class);
 
         currentSite = getIntent().getParcelableExtra("site");
-        getSupportActionBar().setTitle(currentSite.name);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            getSupportActionBar().setTitle(currentSite.name);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mainView.setWebViewClient(new WebViewClient() {
             @Override
@@ -86,7 +90,9 @@ public class WebViewActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 // Clear refresh spinner if necessary
                 srl.setRefreshing(false);
-                getSupportActionBar().setTitle(view.getTitle());
+                if (actionBar != null) {
+                    actionBar.setTitle(view.getTitle());
+                }
             }
         });
 
@@ -153,7 +159,10 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void loadUrl() {
-        getSupportActionBar().setSubtitle(currentSite.url);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setSubtitle(currentSite.url);
+        }
         android.webkit.WebView mainView = (android.webkit.WebView) findViewById(R.id.main_view);
         mainView.loadUrl(currentSite.url);
 
