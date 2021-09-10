@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.palette.graphics.Palette;
 import androidx.palette.graphics.Target;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
+    @NonNull
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new RecyclerViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.site_widget_layout, parent, false));

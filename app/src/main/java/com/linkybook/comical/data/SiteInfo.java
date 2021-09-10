@@ -30,7 +30,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.Gson;
 import com.google.gson.annotations.JsonAdapter;
 import com.linkybook.comical.data.serializers.BitmapSerializer;
-import com.linkybook.comical.data.serializers.DateSerializer;
+import com.linkybook.comical.data.serializers.LocalDateSerializer;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -52,8 +52,8 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public int visits = 0;
 
     @ColumnInfo(name = "last_visit")
-    @JsonAdapter(DateSerializer.class)
-    public Date lastVisit;
+    @JsonAdapter(LocalDateSerializer.class)
+    public LocalDate lastVisit;
 
     @ColumnInfo(name = "decay_date")
     @JsonAdapter(LocalDateSerializer.class)
