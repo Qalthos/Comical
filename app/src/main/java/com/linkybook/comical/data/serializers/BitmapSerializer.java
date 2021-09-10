@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.linkybook.comical.data;
+package com.linkybook.comical.data.serializers;
 
 import android.graphics.Bitmap;
 
@@ -26,10 +26,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.linkybook.comical.data.Converters;
 
 import java.lang.reflect.Type;
 
-public class Serializers implements JsonSerializer<Bitmap>, JsonDeserializer<Bitmap> {
+public class BitmapSerializer implements JsonSerializer<Bitmap>, JsonDeserializer<Bitmap> {
     @Override
     public JsonElement serialize(Bitmap src, Type typeOfSrc, JsonSerializationContext context) {
         return new JsonPrimitive(Converters.bitmapToBase64(src));

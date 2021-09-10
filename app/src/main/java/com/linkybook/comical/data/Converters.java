@@ -1,14 +1,15 @@
 package com.linkybook.comical.data;
 
-import androidx.room.TypeConverter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import androidx.room.TypeConverter;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
-class Converters {
+public class Converters {
     @TypeConverter
     public static Bitmap base64ToBitmap(String data) {
         byte[] decodedBytes = Base64.decode(data, Base64.DEFAULT);
@@ -33,11 +34,7 @@ class Converters {
 
     @TypeConverter
     public static Long dateToTimestamp(Date date) {
-        if (date == null) {
-            return null;
-        } else {
-            return date.getTime();
-        }
+        return date == null ? null : date.getTime();
     }
 
 }

@@ -53,6 +53,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             holder.name.setTextColor(color.getTitleTextColor());
             holder.url.setTextColor(color.getBodyTextColor());
+            holder.fav.setTextColor(color.getBodyTextColor());
             holder.itemView.setBackgroundColor(color.getRgb());
         }
 
