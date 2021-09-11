@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -68,6 +69,7 @@ public class WebViewActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        mainView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         mainView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(android.webkit.WebView view, WebResourceRequest wrq) {
@@ -146,7 +148,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        android.webkit.WebView browser = (android.webkit.WebView) findViewById(R.id.main_view);
+        android.webkit.WebView browser = findViewById(R.id.main_view);
         if(browser.canGoBack()) {
             browser.goBack();
         } else {
@@ -163,7 +165,7 @@ public class WebViewActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setSubtitle(currentSite.url);
         }
-        android.webkit.WebView mainView = (android.webkit.WebView) findViewById(R.id.main_view);
+        android.webkit.WebView mainView = findViewById(R.id.main_view);
         mainView.loadUrl(currentSite.url);
 
         // Update share intent
