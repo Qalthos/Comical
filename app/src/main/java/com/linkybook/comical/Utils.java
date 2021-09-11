@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Utils {
@@ -114,5 +116,23 @@ public class Utils {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+    }
+
+    public static ArrayList<DayOfWeek> decodeUpdates(int updates) {
+        ArrayList<DayOfWeek> days = new ArrayList<>();
+        for(DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            if((updates >> dayOfWeek.getValue() & 1) == 1) {
+                days.add(dayOfWeek);
+            }
+        }
+        return days;
+    }
+
+    public static int encodeUpdates(ArrayList<DayOfWeek> days) {
+        int updates = 0;
+        for(DayOfWeek dayOfWeek: days) {
+            updates += 1 << dayOfWeek.getValue();
+        }
+        return updates;
     }
 }
