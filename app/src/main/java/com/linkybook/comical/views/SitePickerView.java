@@ -38,7 +38,7 @@ import com.linkybook.comical.data.SiteInfo;
 
 import java.util.ArrayList;
 
-public class SitePickerView extends AppCompatActivity implements View.OnClickListener,View.OnLongClickListener {
+public class SitePickerView extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
     private RecyclerViewAdapter recyclerViewAdapter;
 
     @Override
@@ -49,7 +49,7 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> startActivity(new Intent(SitePickerView.this, SiteEditor.class)));
 
-        RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler);
+        RecyclerView recycler = findViewById(R.id.recycler);
         recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<>(), this);
         recycler.setLayoutManager(new LinearLayoutManager(this));
 
@@ -67,9 +67,9 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_import) {
+        if (item.getItemId() == R.id.action_import) {
             Utils.importFromFile(SitePickerView.this);
-        } else if(item.getItemId() == R.id.action_export) {
+        } else if (item.getItemId() == R.id.action_export) {
             Utils.exportToFile(SitePickerView.this);
         } else {
             return super.onOptionsItemSelected(item);

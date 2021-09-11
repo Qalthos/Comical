@@ -1,5 +1,7 @@
 package com.linkybook.comical;
 
+import static com.linkybook.comical.Utils.decodeUpdates;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.linkybook.comical.data.SiteInfo;
 
+import java.time.DayOfWeek;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,21 +44,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.name.setText(site.name);
         holder.url.setText(site.url);
         holder.icon.setImageBitmap(site.favicon);
-        if(site.favorite) {
+
+        if (site.visits > 0) {
+            StringBuilder schedule = new StringBuilder();
+            for (DayOfWeek day : decodeUpdates(site.visits)) {
+                schedule.append(day.toString().charAt(0));
+            }
+            holder.updates.setText(String.join(" ", schedule));
+        } else {
+            holder.updates.setText("");
+        }
+
+        if (site.favorite) {
             holder.fav.setText("♥");
         } else {
             holder.fav.setText("");
         }
 
-        if(site.favicon != null) {
+        if (site.favicon != null) {
             Palette.Builder pb = Palette.from(site.favicon);
             pb.addTarget(Target.VIBRANT);
             Palette p = pb.generate();
             Palette.Swatch color = p.getDominantSwatch();
 
-            if(color != null) {
+            if (color != null) {
                 holder.name.setTextColor(color.getTitleTextColor());
                 holder.url.setTextColor(color.getBodyTextColor());
+                holder.updates.setTextColor(color.getBodyTextColor());
                 holder.fav.setTextColor(color.getBodyTextColor());
                 holder.itemView.setBackgroundColor(color.getRgb());
             }
@@ -80,15 +95,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     static class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final TextView url;
+        private final TextView updates;
         private final TextView fav;
         private final ImageView icon;
 
         RecyclerViewHolder(View view) {
             super(view);
-            name = (TextView) view.findViewById(R.id.card_name);
-            url = (TextView) view.findViewById(R.id.card_url);
-            icon = (ImageView) view.findViewById(R.id.card_icon);
-            fav = (TextView) view.findViewById(R.id.card_favorite);
+            name = view.findViewById(R.id.card_name);
+            url = view.findViewById(R.id.card_url);
+            icon = view.findViewById(R.id.card_icon);
+            updates = view.findViewById(R.id.card_updates);
+            fav = view.findViewById(R.id.card_favorite);
         }
     }
 }

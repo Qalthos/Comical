@@ -18,6 +18,9 @@
 
 package com.linkybook.comical.views;
 
+import static com.linkybook.comical.Utils.decodeUpdates;
+import static com.linkybook.comical.Utils.encodeUpdates;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,9 +31,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
+
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SiteEditor extends AppCompatActivity {
@@ -39,6 +48,18 @@ public class SiteEditor extends AppCompatActivity {
 
     EditText name;
     EditText url;
+    MaterialButtonToggleGroup toggleGroup;
+    final Map<Integer, DayOfWeek> days = new HashMap<Integer, DayOfWeek>() {
+        {
+            put(R.id.dow_mon, DayOfWeek.MONDAY);
+            put(R.id.dow_tue, DayOfWeek.TUESDAY);
+            put(R.id.dow_wed, DayOfWeek.WEDNESDAY);
+            put(R.id.dow_thu, DayOfWeek.THURSDAY);
+            put(R.id.dow_fri, DayOfWeek.FRIDAY);
+            put(R.id.dow_sat, DayOfWeek.SATURDAY);
+            put(R.id.dow_sun, DayOfWeek.SUNDAY);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +69,37 @@ public class SiteEditor extends AppCompatActivity {
 
         name = findViewById(R.id.site_name);
         url = findViewById(R.id.site_url);
+        toggleGroup = findViewById(R.id.site_update_picker);
+        toggleGroup.clearChecked();
         Button submitButton = findViewById(R.id.site_add_button);
 
         svm = new ViewModelProvider(this).get(SiteViewModel.class);
         site = getIntent().getParcelableExtra("site");
 
-        if(site == null) {
+        if (site == null) {
             site = new SiteInfo();
         } else {
             name.setText(site.name);
             url.setText(site.url);
+            if (site.visits > 0) {
+                ArrayList<DayOfWeek> selectedDays = decodeUpdates(site.visits);
+                for (Map.Entry<Integer, DayOfWeek> dow : days.entrySet()) {
+                    if (selectedDays.contains(dow.getValue())) {
+                        toggleGroup.check(dow.getKey());
+                    }
+                }
+            }
             submitButton.setText(R.string.prompt_update);
         }
 
         submitButton.setOnClickListener(view -> {
             site.name = name.getText().toString();
             site.url = url.getText().toString();
+            ArrayList<DayOfWeek> selectedDays = new ArrayList<>();
+            for (int id : toggleGroup.getCheckedButtonIds()) {
+                selectedDays.add(days.get(id));
+            }
+            site.visits = encodeUpdates(selectedDays);
             svm.addOrUpdateSite(site);
             finish();
         });
@@ -72,10 +108,10 @@ public class SiteEditor extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu, menu);
-        if(site.favorite) {
+        if (site.favorite) {
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
         }
-        if(site.name != null) {
+        if (site.name != null) {
             menu.findItem(R.id.action_delete).setVisible(true);
         }
         return true;
@@ -85,16 +121,16 @@ public class SiteEditor extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         SiteInfo site = SiteEditor.this.site;
 
-        if(item.getItemId() == R.id.action_favorite) {
+        if (item.getItemId() == R.id.action_favorite) {
             site.favorite = !site.favorite;
-            if(site.favorite) {
+            if (site.favorite) {
                 item.setIcon(R.drawable.ic_favorite_black_24dp);
             } else {
                 item.setIcon(R.drawable.ic_favorite_border_black_24dp);
             }
-        } else if(item.getItemId() == R.id.action_delete) {
-                svm.deleteSite(site);
-                finish();
+        } else if (item.getItemId() == R.id.action_delete) {
+            svm.deleteSite(site);
+            finish();
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -103,7 +139,7 @@ public class SiteEditor extends AppCompatActivity {
 
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
