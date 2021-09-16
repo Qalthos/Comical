@@ -49,8 +49,6 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @JsonAdapter(BitmapSerializer.class)
     public Bitmap favicon;
 
-    public int visits = 0;
-
     @ColumnInfo(name = "last_visit")
     @JsonAdapter(LocalDateSerializer.class)
     public LocalDate lastVisit;
@@ -60,6 +58,8 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public LocalDate decayDate = LocalDate.now();
 
     public boolean favorite = false;
+    @ColumnInfo(name = "visits")
+    public int update_schedule = 0;
 
     @Override
     public int compareTo(SiteInfo other) {
@@ -77,7 +77,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
             visitValue *= 2;
         }
         // Defined updates are valuable
-        if (this.visits > 0) {
+        if (this.update_schedule > 0) {
             visitValue *= 2;
         }
         score += visitValue;
