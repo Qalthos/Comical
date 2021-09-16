@@ -16,15 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.linkybook.comical;
+package com.linkybook.comical.utils;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.linkybook.comical.SiteViewModel;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,34 +34,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-public class Utils {
-    public static String urlDomain(String url) {
-        String[] domainBits;
-        int l;
-        try {
-            URI uri = new URI(url);
-            domainBits = uri.getHost().split("\\.");
-            l = domainBits.length;
-        } catch (URISyntaxException e) {
-            return "";
-        }
-        return String.join(".", Arrays.copyOfRange(domainBits, l-2, l));
-    }
-
-    public static String urlDomain(Uri uri) {
-        String[] domainBits;
-        int l;
-        domainBits = uri.getHost().split("\\.");
-        l = domainBits.length;
-        return String.join(".", Arrays.copyOfRange(domainBits, l-2, l));
-    }
-
+public class FileIO {
     public static void importFromFile(Context ctx) {
         File file = new File(ctx.getExternalFilesDir(null), "data.json");
         if(isExternalStorageReadable()) {
@@ -116,23 +91,5 @@ public class Utils {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
-    }
-
-    public static ArrayList<DayOfWeek> decodeUpdates(int updates) {
-        ArrayList<DayOfWeek> days = new ArrayList<>();
-        for(DayOfWeek dayOfWeek : DayOfWeek.values()) {
-            if((updates >> dayOfWeek.getValue() & 1) == 1) {
-                days.add(dayOfWeek);
-            }
-        }
-        return days;
-    }
-
-    public static int encodeUpdates(ArrayList<DayOfWeek> days) {
-        int updates = 0;
-        for(DayOfWeek dayOfWeek: days) {
-            updates += 1 << dayOfWeek.getValue();
-        }
-        return updates;
     }
 }

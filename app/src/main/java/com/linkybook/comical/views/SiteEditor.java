@@ -18,8 +18,8 @@
 
 package com.linkybook.comical.views;
 
-import static com.linkybook.comical.Utils.decodeUpdates;
-import static com.linkybook.comical.Utils.encodeUpdates;
+import static com.linkybook.comical.utils.Schedule.decodeUpdates;
+import static com.linkybook.comical.utils.Schedule.encodeUpdates;
 
 import android.os.Bundle;
 import android.view.Menu;

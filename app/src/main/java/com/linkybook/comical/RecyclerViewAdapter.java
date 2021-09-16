@@ -1,6 +1,6 @@
 package com.linkybook.comical;
 
-import static com.linkybook.comical.Utils.decodeUpdates;
+import static com.linkybook.comical.utils.Schedule.decodeUpdates;
 
 import android.view.LayoutInflater;
 import android.view.View;
