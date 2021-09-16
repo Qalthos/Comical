@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {SiteInfo.class}, version = 4)
+@Database(entities = {SiteInfo.class}, version = 5)
 @TypeConverters({Converters.class})
 public abstract class SiteDB extends RoomDatabase {
     private static SiteDB INSTANCE;
@@ -20,7 +20,7 @@ public abstract class SiteDB extends RoomDatabase {
             INSTANCE =
                     Room.databaseBuilder(context.getApplicationContext(), SiteDB.class, "site")
                             .addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3)
-                            .addMigrations(MIGRATION_3_4)
+                            .addMigrations(MIGRATION_3_4).addMigrations(MIGRATION_4_5)
                             .build();
         }
         return INSTANCE;
@@ -45,6 +45,13 @@ public abstract class SiteDB extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE `site` ADD decay_date INTEGER default 0");
+        }
+    };
+
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `site` ADD orientation TEXT NOT NULL default 'ANY'");
         }
     };
 }

@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.JsonAdapter;
 import com.linkybook.comical.data.serializers.BitmapSerializer;
 import com.linkybook.comical.data.serializers.LocalDateSerializer;
+import com.linkybook.comical.utils.Orientation;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -60,6 +61,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public boolean favorite = false;
     @ColumnInfo(name = "visits")
     public int update_schedule = 0;
+    public Orientation orientation = Orientation.ANY;
 
     @Override
     public int compareTo(SiteInfo other) {

@@ -25,4 +25,9 @@
     <string name="dow_fri">Fri</string>
     <string name="dow_sat">Sat</string>
     <string name="dow_sun">Sun</string>
+
+    <string name="orientation">Force Orientation</string>
+    <string name="portrait">Portrait</string>
+    <string name="landscape">Landscape</string>
+    <string name="responsive">Responsive</string>
 </resources>

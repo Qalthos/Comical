@@ -6,6 +6,8 @@ import android.util.Base64;
 
 import androidx.room.TypeConverter;
 
+import com.linkybook.comical.utils.Orientation;
+
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -37,6 +39,16 @@ public class Converters {
     @TypeConverter
     public static Long dateToTimestamp(LocalDate date) {
         return date == null ? null : Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
+    }
+
+    @TypeConverter
+    public static Orientation fromInt(String value) {
+        return Orientation.valueOf(value);
+    }
+
+    @TypeConverter
+    public static String orientationToString(Orientation orientation) {
+        return orientation.name();
     }
 
 }
