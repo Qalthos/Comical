@@ -17,6 +17,7 @@
     <string name="prompt_add">Add webcomic</string>
     <string name="prompt_update">Update webcomic</string>
 
+    <string name="update_schedule">Update Schedule</string>
     <string name="dow_mon">Mon</string>
     <string name="dow_tue">Tue</string>
     <string name="dow_wed">Wed</string>
@@ -24,5 +25,4 @@
     <string name="dow_fri">Fri</string>
     <string name="dow_sat">Sat</string>
     <string name="dow_sun">Sun</string>
-    <string name="update_schedule">Update Schedule</string>
 </resources>

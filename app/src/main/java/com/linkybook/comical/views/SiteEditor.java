@@ -81,8 +81,8 @@ public class SiteEditor extends AppCompatActivity {
         } else {
             name.setText(site.name);
             url.setText(site.url);
-            if (site.visits > 0) {
-                ArrayList<DayOfWeek> selectedDays = decodeUpdates(site.visits);
+            if (site.update_schedule > 0) {
+                ArrayList<DayOfWeek> selectedDays = decodeUpdates(site.update_schedule);
                 for (Map.Entry<Integer, DayOfWeek> dow : days.entrySet()) {
                     if (selectedDays.contains(dow.getValue())) {
                         toggleGroup.check(dow.getKey());
@@ -99,7 +99,7 @@ public class SiteEditor extends AppCompatActivity {
             for (int id : toggleGroup.getCheckedButtonIds()) {
                 selectedDays.add(days.get(id));
             }
-            site.visits = encodeUpdates(selectedDays);
+            site.update_schedule = encodeUpdates(selectedDays);
             svm.addOrUpdateSite(site);
             finish();
         });

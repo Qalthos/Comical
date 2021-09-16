@@ -45,9 +45,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.url.setText(site.url);
         holder.icon.setImageBitmap(site.favicon);
 
-        if (site.visits > 0) {
+        if (site.update_schedule > 0) {
             StringBuilder schedule = new StringBuilder();
-            for (DayOfWeek day : decodeUpdates(site.visits)) {
+            for (DayOfWeek day : decodeUpdates(site.update_schedule)) {
                 schedule.append(day.toString().charAt(0));
             }
             holder.updates.setText(String.join(" ", schedule));
