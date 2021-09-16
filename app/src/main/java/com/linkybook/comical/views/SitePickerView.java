@@ -33,8 +33,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.linkybook.comical.R;
 import com.linkybook.comical.RecyclerViewAdapter;
 import com.linkybook.comical.SiteViewModel;
-import com.linkybook.comical.Utils;
 import com.linkybook.comical.data.SiteInfo;
+import com.linkybook.comical.utils.FileIO;
 
 import java.util.ArrayList;
 
@@ -68,9 +68,9 @@ public class SitePickerView extends AppCompatActivity implements View.OnClickLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_import) {
-            Utils.importFromFile(SitePickerView.this);
+            FileIO.importFromFile(SitePickerView.this);
         } else if (item.getItemId() == R.id.action_export) {
-            Utils.exportToFile(SitePickerView.this);
+            FileIO.exportToFile(SitePickerView.this);
         } else {
             return super.onOptionsItemSelected(item);
         }

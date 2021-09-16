@@ -18,7 +18,7 @@
 
 package com.linkybook.comical.views;
 
-import static com.linkybook.comical.Utils.urlDomain;
+import static com.linkybook.comical.utils.URL.urlDomain;
 
 import android.content.Intent;
 import android.net.Uri;
