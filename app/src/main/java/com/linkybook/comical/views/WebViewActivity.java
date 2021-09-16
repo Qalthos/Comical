@@ -21,6 +21,7 @@ package com.linkybook.comical.views;
 import static com.linkybook.comical.utils.URL.urlDomain;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -42,6 +43,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
+import com.linkybook.comical.utils.Orientation;
 
 public class WebViewActivity extends AppCompatActivity {
     private SiteViewModel svm;
@@ -67,6 +69,13 @@ public class WebViewActivity extends AppCompatActivity {
         if(actionBar != null) {
             getSupportActionBar().setTitle(currentSite.name);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        if (currentSite.orientation == Orientation.LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+        } else if (currentSite.orientation == Orientation.PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
 
         mainView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);

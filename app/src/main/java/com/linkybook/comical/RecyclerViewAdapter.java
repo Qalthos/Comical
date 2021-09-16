@@ -75,6 +75,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 holder.itemView.setBackgroundColor(color.getRgb());
             }
         }
+        switch (site.orientation) {
+            case ANY:
+                holder.rotation.setImageResource(R.drawable.ic_baseline_screen_rotation_24);
+                break;
+            case PORTRAIT:
+                holder.rotation.setImageResource(R.drawable.ic_baseline_stay_current_portrait_24);
+                break;
+            case LANDSCAPE:
+                holder.rotation.setImageResource(R.drawable.ic_baseline_stay_current_landscape_24);
+                break;
+        }
 
         holder.itemView.setTag(site);
         holder.itemView.setOnClickListener(clickListener);
@@ -98,6 +109,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final TextView updates;
         private final TextView fav;
         private final ImageView icon;
+        private final ImageView rotation;
 
         RecyclerViewHolder(View view) {
             super(view);
@@ -106,6 +118,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             icon = view.findViewById(R.id.card_icon);
             updates = view.findViewById(R.id.card_updates);
             fav = view.findViewById(R.id.card_favorite);
+            rotation = view.findViewById(R.id.card_rotation);
         }
     }
 }

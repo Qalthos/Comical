@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
+import com.linkybook.comical.utils.Orientation;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class SiteEditor extends AppCompatActivity {
     EditText name;
     EditText url;
     MaterialButtonToggleGroup toggleGroup;
+    RadioGroup orientation;
     final Map<Integer, DayOfWeek> days = new HashMap<Integer, DayOfWeek>() {
         {
             put(R.id.dow_mon, DayOfWeek.MONDAY);
@@ -71,6 +74,8 @@ public class SiteEditor extends AppCompatActivity {
         url = findViewById(R.id.site_url);
         toggleGroup = findViewById(R.id.site_update_picker);
         toggleGroup.clearChecked();
+        orientation = findViewById(R.id.site_orientation_group);
+        orientation.check(R.id.site_orientation_responsive);
         Button submitButton = findViewById(R.id.site_add_button);
 
         svm = new ViewModelProvider(this).get(SiteViewModel.class);
@@ -89,6 +94,14 @@ public class SiteEditor extends AppCompatActivity {
                     }
                 }
             }
+            switch (site.orientation) {
+                case PORTRAIT:
+                    orientation.check(R.id.site_orientation_portrait);
+                    break;
+                case LANDSCAPE:
+                    orientation.check(R.id.site_orientation_landscape);
+                    break;
+            }
             submitButton.setText(R.string.prompt_update);
         }
 
@@ -100,6 +113,13 @@ public class SiteEditor extends AppCompatActivity {
                 selectedDays.add(days.get(id));
             }
             site.update_schedule = encodeUpdates(selectedDays);
+            if (orientation.getCheckedRadioButtonId() == R.id.site_orientation_portrait) {
+                site.orientation = Orientation.PORTRAIT;
+            } else if (orientation.getCheckedRadioButtonId() == R.id.site_orientation_landscape) {
+                site.orientation = Orientation.LANDSCAPE;
+            } else {
+                site.orientation = Orientation.ANY;
+            }
             svm.addOrUpdateSite(site);
             finish();
         });

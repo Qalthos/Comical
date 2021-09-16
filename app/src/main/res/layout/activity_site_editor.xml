@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/update_schedule"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/site_orientation_group"
             app:layout_constraintEnd_toStartOf="@id/site_update_picker"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -63,7 +63,7 @@
             android:id="@+id/site_update_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/site_orientation_group"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/site_update_label"
             app:layout_constraintTop_toTopOf="parent">
@@ -118,6 +118,46 @@
                 android:text="@string/dow_sun" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/site_orientation_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/orientation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/site_orientation_group"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/site_update_picker" />
+
+        <RadioGroup
+            android:id="@+id/site_orientation_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/site_orientation_label"
+            app:layout_constraintTop_toBottomOf="@id/site_update_picker" >
+
+            <RadioButton
+                android:id="@+id/site_orientation_responsive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/responsive" />
+
+            <RadioButton
+                android:id="@+id/site_orientation_landscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/landscape" />
+
+            <RadioButton
+                android:id="@+id/site_orientation_portrait"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/portrait" />
+
+        </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

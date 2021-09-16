@@ -17,7 +17,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/add"
-        android:src="@drawable/ic_add_black_24dp"
+        android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
