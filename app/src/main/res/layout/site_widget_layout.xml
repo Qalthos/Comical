@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:background="@drawable/card_back"
@@ -41,11 +40,12 @@
             android:id="@+id/card_rotation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/orientation"
             app:layout_constraintBottom_toTopOf="@id/card_url"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/card_name"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_screen_rotation_24"  />
+            app:srcCompat="@drawable/ic_baseline_screen_rotation_24" />
 
         <TextView
             android:id="@+id/card_url"
@@ -63,12 +63,12 @@
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/card_favorite"
+            app:layout_constraintEnd_toStartOf="@id/card_flags"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_url" />
 
         <TextView
-            android:id="@+id/card_favorite"
+            android:id="@+id/card_flags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
