@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.linkybook.comical.data.SiteInfo;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,21 +48,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.url.setText(site.url);
         holder.icon.setImageBitmap(site.favicon);
 
+        ArrayList<DayOfWeek> schedule = decodeUpdates(site.update_schedule);
         if (site.update_schedule > 0) {
-            StringBuilder schedule = new StringBuilder();
-            for (DayOfWeek day : decodeUpdates(site.update_schedule)) {
-                schedule.append(day.toString().charAt(0));
+            StringBuilder scheduleText = new StringBuilder();
+            for (DayOfWeek day : schedule) {
+                scheduleText.append(day.toString().charAt(0));
             }
-            holder.updates.setText(String.join(" ", schedule));
+            holder.updates.setText(String.join(" ", scheduleText));
         } else {
             holder.updates.setText("");
         }
 
-        if (site.favorite) {
-            holder.fav.setText("♥");
-        } else {
-            holder.fav.setText("");
+        String flags = "";
+        LocalDate now = LocalDate.now();
+        if (site.lastVisit.until(now).toTotalMonths() > 0) {
+            flags += "\uD83D\uDCA4";
+        } else if (site.update_schedule > 0) {
+            LocalDate testDate = site.lastVisit;
+            while (testDate.compareTo(now) < 0) {
+                testDate = testDate.plus(Period.ofDays(1));
+                if (schedule.contains(testDate.getDayOfWeek())) {
+                    flags += "🆕";
+                    break;
+                }
+            }
         }
+        if (site.favorite) {
+            flags += "♥";
+        }
+        holder.flags.setText(flags);
 
         if (site.favicon != null) {
             Palette.Builder pb = Palette.from(site.favicon);
@@ -71,7 +88,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 holder.name.setTextColor(color.getTitleTextColor());
                 holder.url.setTextColor(color.getBodyTextColor());
                 holder.updates.setTextColor(color.getBodyTextColor());
-                holder.fav.setTextColor(color.getBodyTextColor());
+                holder.flags.setTextColor(color.getBodyTextColor());
                 holder.itemView.setBackgroundColor(color.getRgb());
             }
         }
@@ -107,7 +124,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final TextView name;
         private final TextView url;
         private final TextView updates;
-        private final TextView fav;
+        private final TextView flags;
         private final ImageView icon;
         private final ImageView rotation;
 
@@ -117,7 +134,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             url = view.findViewById(R.id.card_url);
             icon = view.findViewById(R.id.card_icon);
             updates = view.findViewById(R.id.card_updates);
-            fav = view.findViewById(R.id.card_favorite);
+            flags = view.findViewById(R.id.card_flags);
             rotation = view.findViewById(R.id.card_rotation);
         }
     }
