@@ -52,7 +52,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     @ColumnInfo(name = "last_visit")
     @JsonAdapter(LocalDateSerializer.class)
-    public LocalDate lastVisit;
+    public LocalDate lastVisit = LocalDate.now();
 
     @ColumnInfo(name = "decay_date")
     @JsonAdapter(LocalDateSerializer.class)
