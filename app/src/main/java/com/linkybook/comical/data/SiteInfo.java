@@ -18,6 +18,8 @@
 
 package com.linkybook.comical.data;
 
+import static com.linkybook.comical.utils.Schedule.decodeUpdates;
+
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -74,13 +76,17 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         double lambda = Math.log(2) / 30;
         double score = Math.exp(lambda * this.lastVisit.until(this.decayDate, ChronoUnit.DAYS));
 
-        int visitValue = 2;
+        double visitValue = 2;
         if (this.favorite) {
             visitValue *= 2;
         }
-        // Defined updates are valuable
-        if (this.update_schedule > 0) {
-            visitValue *= 2;
+
+        int weekly = decodeUpdates(this.update_schedule).size();
+        // Defined updates are valuable, but try to normalize impact
+        if (weekly > 0) {
+            visitValue *= 2.0 / weekly;
+        } else {
+            visitValue *= 1.0 / 7;
         }
         score += visitValue;
 
