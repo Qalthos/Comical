@@ -21,5 +21,5 @@ package com.linkybook.comical.utils;
 public enum Orientation {
     ANY,
     PORTRAIT,
-    LANDSCAPE;
+    LANDSCAPE
 }

@@ -35,8 +35,11 @@ import com.linkybook.comical.data.serializers.BitmapSerializer;
 import com.linkybook.comical.data.serializers.LocalDateSerializer;
 import com.linkybook.comical.utils.Orientation;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 @Entity(tableName = "site",
         indices = {@Index(value = {"name"}, unique = true)}
@@ -65,9 +68,43 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public int update_schedule = 0;
     public Orientation orientation = Orientation.ANY;
 
+    public ArrayList<DayOfWeek> schedule() {
+        return decodeUpdates(this.update_schedule);
+    }
+
+    public int hasNewProbably() {
+        /*
+        -1: Longer than a month since last visit
+        0: Probably not
+        1: Longer than a week since last visit
+        2: Update schedule indicates an update
+         */
+        LocalDate now = LocalDate.now();
+        LocalDate testDate = this.lastVisit;
+        if (testDate.until(now).toTotalMonths() > 0) {
+            return -1;
+        }
+        if (testDate.until(now).getDays() > 7) {
+            return 1;
+        }
+        if (this.update_schedule > 0) {
+            while (testDate.compareTo(now) < 0) {
+                testDate = testDate.plus(Period.ofDays(1));
+                if (this.schedule().contains(testDate.getDayOfWeek())) {
+                    return 2;
+                }
+            }
+        }
+        return 0;
+    }
+
     @Override
     public int compareTo(SiteInfo other) {
         // Return reverse sorted list by decayDate
+        int newness;
+        if ((newness = other.hasNewProbably() - this.hasNewProbably()) != 0) {
+            return newness;
+        }
         return -this.decayDate.compareTo(other.decayDate);
     }
 

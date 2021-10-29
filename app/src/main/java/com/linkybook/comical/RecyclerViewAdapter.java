@@ -1,7 +1,5 @@
 package com.linkybook.comical;
 
-import static com.linkybook.comical.utils.Schedule.decodeUpdates;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.linkybook.comical.data.SiteInfo;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.url.setText(site.url);
         holder.icon.setImageBitmap(site.favicon);
 
-        ArrayList<DayOfWeek> schedule = decodeUpdates(site.update_schedule);
+        ArrayList<DayOfWeek> schedule = site.schedule();
         if (site.update_schedule > 0) {
             StringBuilder scheduleText = new StringBuilder();
             for (DayOfWeek day : schedule) {
@@ -60,18 +56,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         String flags = "";
-        LocalDate now = LocalDate.now();
-        if (site.lastVisit.until(now).toTotalMonths() > 0) {
-            flags += "\uD83D\uDCA4";
-        } else if (site.update_schedule > 0) {
-            LocalDate testDate = site.lastVisit;
-            while (testDate.compareTo(now) < 0) {
-                testDate = testDate.plus(Period.ofDays(1));
-                if (schedule.contains(testDate.getDayOfWeek())) {
-                    flags += "🆕";
-                    break;
-                }
-            }
+        switch (site.hasNewProbably()) {
+            case -1:
+                flags += "\uD83D\uDCA4";
+                break;
+            case 1:
+                flags += "🆕?";
+                break;
+            case 2:
+                flags += "🆕";
+                break;
         }
         if (site.favorite) {
             flags += "♥";
