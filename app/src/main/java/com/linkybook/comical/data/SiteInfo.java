@@ -76,7 +76,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         /*
         -1: Longer than a month since last visit
         0: Probably not
-        1: Longer than a week since last visit
+        1: Longer than two weeks since last visit
         2: Update schedule indicates an update
          */
         LocalDate now = LocalDate.now();
@@ -84,7 +84,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         if (testDate.until(now).toTotalMonths() > 0) {
             return -1;
         }
-        if (testDate.until(now).getDays() > 7) {
+        if (testDate.until(now).getDays() > 14) {
             return 1;
         }
         if (this.update_schedule > 0) {
