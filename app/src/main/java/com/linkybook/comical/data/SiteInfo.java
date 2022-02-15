@@ -112,7 +112,6 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     }
 
     public void visit() {
-        this.lastVisit = LocalDate.now();
         double score = this.getScore();
 
         double visitValue = 2;
@@ -128,20 +127,21 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         score += visitValue;
 
         if (this.backlog) {
-            // clamp backlog to 2^20
-            score = Math.max(score, 2^10);
+            // clamp backlog lower
+            score = Math.max(score, 2^7);
         } else {
-            // clamp everything else to 2^30
-            score = Math.max(score, 2^15);
+            // clamp everything else higher
+            score = Math.max(score, 2^8);
         }
 
+        this.lastVisit = LocalDate.now();
         // We've changed the page, hiatus must be over?
         this.hiatus = false;
         this.setScore(score);
     }
 
     public double getScore() {
-        return Math.exp(lambda * this.lastVisit.until(this.decayDate, ChronoUnit.DAYS));
+        return Math.exp(lambda * LocalDate.now().until(this.decayDate, ChronoUnit.DAYS));
     }
 
     public void setScore(double score) {
