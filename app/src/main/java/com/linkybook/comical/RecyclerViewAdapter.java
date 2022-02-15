@@ -1,5 +1,6 @@
 package com.linkybook.comical;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.updates.setText("");
         }
 
+        holder.score.setText(String.valueOf(site.getScore()));
+
         String flags = "";
         switch (site.hasNewProbably()) {
             case backlog:
@@ -86,9 +89,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             if (color != null) {
                 holder.name.setTextColor(color.getTitleTextColor());
+                holder.flags.setTextColor(color.getBodyTextColor());
+                holder.score.setTextColor(color.getBodyTextColor());
                 holder.url.setTextColor(color.getBodyTextColor());
                 holder.updates.setTextColor(color.getBodyTextColor());
-                holder.flags.setTextColor(color.getBodyTextColor());
                 holder.itemView.setBackgroundColor(color.getRgb());
             }
         }
@@ -114,6 +118,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return siteList.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void addItems(List<SiteInfo> siteList) {
         Collections.sort(siteList);
         this.siteList = siteList;
@@ -121,20 +126,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder {
+        private final TextView flags;
         private final TextView name;
+        private final TextView score;
         private final TextView url;
         private final TextView updates;
-        private final TextView flags;
         private final ImageView icon;
         private final ImageView rotation;
 
         RecyclerViewHolder(View view) {
             super(view);
+            flags = view.findViewById(R.id.card_flags);
             name = view.findViewById(R.id.card_name);
+            score = view.findViewById(R.id.card_score);
             url = view.findViewById(R.id.card_url);
             icon = view.findViewById(R.id.card_icon);
             updates = view.findViewById(R.id.card_updates);
-            flags = view.findViewById(R.id.card_flags);
             rotation = view.findViewById(R.id.card_rotation);
         }
     }
