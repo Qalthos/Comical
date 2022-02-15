@@ -42,7 +42,7 @@ public class Converters {
     }
 
     @TypeConverter
-    public static Orientation fromInt(String value) {
+    public static Orientation fromString(String value) {
         return Orientation.valueOf(value);
     }
 

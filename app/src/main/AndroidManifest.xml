@@ -15,7 +15,6 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".views.SitePickerView"
-            android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.WebViewActivity"
-            android:label="@string/app_name">
+            android:name=".views.WebViewActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.linkybook.comical.views.SitePickerView" />
