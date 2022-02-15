@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
@@ -77,6 +78,8 @@ public class SiteEditor extends AppCompatActivity {
         orientation = findViewById(R.id.site_orientation_group);
         orientation.check(R.id.site_orientation_responsive);
         Button submitButton = findViewById(R.id.site_add_button);
+        SwitchMaterial backlog_switch = findViewById(R.id.backlog);
+        SwitchMaterial hiatus_switch = findViewById(R.id.hiatus);
 
         svm = new ViewModelProvider(this).get(SiteViewModel.class);
         site = getIntent().getParcelableExtra("site");
@@ -105,6 +108,9 @@ public class SiteEditor extends AppCompatActivity {
             submitButton.setText(R.string.prompt_update);
         }
 
+        backlog_switch.setChecked(site.backlog);
+        hiatus_switch.setChecked(site.hiatus);
+
         submitButton.setOnClickListener(view -> {
             site.name = name.getText().toString();
             site.url = url.getText().toString();
@@ -120,6 +126,8 @@ public class SiteEditor extends AppCompatActivity {
             } else {
                 site.orientation = Orientation.ANY;
             }
+            site.backlog = backlog_switch.isChecked();
+            site.hiatus = hiatus_switch.isChecked();
             svm.addOrUpdateSite(site);
             finish();
         });

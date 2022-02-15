@@ -20,6 +20,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_backlog"
+        android:icon="@android:drawable/ic_media_ff"
+        android:title="@string/backlog"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_hiatus"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="@string/hiatus"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_favorite"
         android:icon="@drawable/ic_favorite_border_black_24dp"
         android:title="@string/action_favorite"

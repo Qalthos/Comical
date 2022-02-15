@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {SiteInfo.class}, version = 5)
+@Database(entities = {SiteInfo.class}, version = 6)
 @TypeConverters({Converters.class})
 public abstract class SiteDB extends RoomDatabase {
     private static SiteDB INSTANCE;
@@ -21,6 +21,7 @@ public abstract class SiteDB extends RoomDatabase {
                     Room.databaseBuilder(context.getApplicationContext(), SiteDB.class, "site")
                             .addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3)
                             .addMigrations(MIGRATION_3_4).addMigrations(MIGRATION_4_5)
+                            .addMigrations(MIGRATION_5_6)
                             .build();
         }
         return INSTANCE;
@@ -52,6 +53,14 @@ public abstract class SiteDB extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE `site` ADD orientation TEXT NOT NULL default 'ANY'");
+        }
+    };
+
+    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `site` ADD backlog INTEGER NOT NULL default 0");
+            database.execSQL("ALTER TABLE `site` ADD hiatus INTEGER NOT NULL default 0");
         }
     };
 }

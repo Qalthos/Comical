@@ -129,6 +129,8 @@ public class WebViewActivity extends AppCompatActivity {
         if(WebViewActivity.this.currentSite.favorite) {
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
         }
+        menu.findItem(R.id.action_backlog).setVisible(WebViewActivity.this.currentSite.backlog);
+        menu.findItem(R.id.action_hiatus).setVisible(WebViewActivity.this.currentSite.hiatus);
 
         MenuItem shareItem = menu.findItem(R.id.action_share);
         share = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
@@ -140,18 +142,24 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SiteInfo site = WebViewActivity.this.currentSite;
         if (item.getItemId() == R.id.action_favorite) {
-            SiteInfo site = WebViewActivity.this.currentSite;
             site.favorite = !site.favorite;
             if (site.favorite) {
                 item.setIcon(R.drawable.ic_favorite_black_24dp);
             } else {
                 item.setIcon(R.drawable.ic_favorite_border_black_24dp);
             }
-            WebViewActivity.this.svm.addOrUpdateSite(site);
+        } else if (item.getItemId() == R.id.action_backlog) {
+            site.backlog = false;
+            item.setVisible(false);
+        } else if (item.getItemId() == R.id.action_hiatus) {
+            site.hiatus = false;
+            item.setVisible(false);
         } else {
             return super.onOptionsItemSelected(item);
         }
+        WebViewActivity.this.svm.addOrUpdateSite(site);
         return true;
     }
 

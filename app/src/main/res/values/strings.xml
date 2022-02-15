@@ -30,4 +30,6 @@
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
     <string name="responsive">Responsive</string>
+    <string name="backlog">Backlog</string>
+    <string name="hiatus">Hiatus</string>
 </resources>

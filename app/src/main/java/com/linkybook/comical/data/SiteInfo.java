@@ -34,6 +34,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.linkybook.comical.data.serializers.BitmapSerializer;
 import com.linkybook.comical.data.serializers.LocalDateSerializer;
 import com.linkybook.comical.utils.Orientation;
+import com.linkybook.comical.utils.Status;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -63,7 +64,10 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     @JsonAdapter(LocalDateSerializer.class)
     public LocalDate decayDate = LocalDate.now();
 
+    public boolean backlog = false;
     public boolean favorite = false;
+    public boolean hiatus = false;
+
     @ColumnInfo(name = "visits")
     public int update_schedule = 0;
     public Orientation orientation = Orientation.ANY;
@@ -72,37 +76,36 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         return decodeUpdates(this.update_schedule);
     }
 
-    public int hasNewProbably() {
-        /*
-        -1: Longer than a month since last visit
-        0: Probably not
-        1: Longer than two weeks since last visit
-        2: Update schedule indicates an update
-         */
+    public Status hasNewProbably() {
+        if (this.hiatus) {
+            return Status.hiatus;
+        } else if (this.backlog) {
+            return Status.backlog;
+        }
         LocalDate now = LocalDate.now();
         LocalDate testDate = this.lastVisit;
         if (testDate.until(now).toTotalMonths() > 0) {
-            return -1;
+            return Status.ignored;
         }
         if (testDate.until(now).getDays() > 14) {
-            return 1;
+            return Status.limbo;
         }
         if (this.update_schedule > 0) {
             while (testDate.compareTo(now) < 0) {
                 testDate = testDate.plus(Period.ofDays(1));
                 if (this.schedule().contains(testDate.getDayOfWeek())) {
-                    return 2;
+                    return Status.unread;
                 }
             }
         }
-        return 0;
+        return Status.read;
     }
 
     @Override
     public int compareTo(SiteInfo other) {
         // Return reverse sorted list by decayDate
         int newness;
-        if ((newness = other.hasNewProbably() - this.hasNewProbably()) != 0) {
+        if ((newness = other.hasNewProbably().compareTo(this.hasNewProbably())) != 0) {
             return newness;
         }
         return -this.decayDate.compareTo(other.decayDate);
@@ -126,6 +129,17 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
             visitValue *= 1.0 / 7;
         }
         score += visitValue;
+
+        if (this.backlog) {
+            // clamp backlog to 2^20
+            score = Math.max(score, 2^20);
+        } else {
+            // clamp everything else to 2^30
+            score = Math.max(score, 2^30);
+        }
+
+        // We've changed the page, hiatus must be over?
+        this.hiatus = false;
 
         // Render score back to time-to-score-one
         this.decayDate = this.lastVisit.plusDays((int) (Math.log(score) / lambda));

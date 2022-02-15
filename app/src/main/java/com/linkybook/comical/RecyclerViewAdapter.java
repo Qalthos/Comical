@@ -57,13 +57,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         String flags = "";
         switch (site.hasNewProbably()) {
-            case -1:
+            case backlog:
+                flags += "⏩";
+                break;
+            case hiatus:
+                flags += "⌛";
+                break;
+            case ignored:
                 flags += "\uD83D\uDCA4";
                 break;
-            case 1:
+            case limbo:
                 flags += "🆕?";
                 break;
-            case 2:
+            case unread:
                 flags += "🆕";
                 break;
         }
