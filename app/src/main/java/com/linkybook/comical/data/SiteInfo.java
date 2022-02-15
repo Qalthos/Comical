@@ -50,8 +50,8 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public int id;
 
     public String name;
-
     public String url;
+    private static final double lambda = Math.log(2) / 30;
 
     @JsonAdapter(BitmapSerializer.class)
     public Bitmap favicon;
@@ -113,8 +113,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     public void visit() {
         this.lastVisit = LocalDate.now();
-        double lambda = Math.log(2) / 30;
-        double score = Math.exp(lambda * this.lastVisit.until(this.decayDate, ChronoUnit.DAYS));
+        double score = this.getScore();
 
         double visitValue = 2;
         if (this.favorite) {
@@ -124,23 +123,28 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         int weekly = decodeUpdates(this.update_schedule).size();
         // Defined updates are valuable, but try to normalize impact
         if (weekly > 0) {
-            visitValue *= 2.0 / weekly;
-        } else {
-            visitValue *= 1.0 / 7;
+            visitValue *= 7.0 / weekly;
         }
         score += visitValue;
 
         if (this.backlog) {
             // clamp backlog to 2^20
-            score = Math.max(score, 2^20);
+            score = Math.max(score, 2^10);
         } else {
             // clamp everything else to 2^30
-            score = Math.max(score, 2^30);
+            score = Math.max(score, 2^15);
         }
 
         // We've changed the page, hiatus must be over?
         this.hiatus = false;
+        this.setScore(score);
+    }
 
+    public double getScore() {
+        return Math.exp(lambda * this.lastVisit.until(this.decayDate, ChronoUnit.DAYS));
+    }
+
+    public void setScore(double score) {
         // Render score back to time-to-score-one
         this.decayDate = this.lastVisit.plusDays((int) (Math.log(score) / lambda));
     }
