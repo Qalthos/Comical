@@ -128,10 +128,10 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
         if (this.backlog) {
             // clamp backlog lower
-            score = Math.max(score, 2^7);
+            score = Math.min(score, 150);
         } else {
             // clamp everything else higher
-            score = Math.max(score, 2^8);
+            score = Math.min(score, 250);
         }
 
         this.lastVisit = LocalDate.now();
