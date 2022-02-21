@@ -10,6 +10,7 @@ import com.linkybook.comical.utils.Orientation;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -32,13 +33,23 @@ public class Converters {
     }
 
     @TypeConverter
-    public static LocalDate fromTimestamp(Long value) {
+    public static LocalDate timestampToDate(Long value) {
         return value == null ? null : new Date(value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @TypeConverter
     public static Long dateToTimestamp(LocalDate date) {
         return date == null ? null : Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
+    }
+
+    @TypeConverter
+    public static LocalDateTime timestampToDateTime(Long value) {
+        return value == null ? null : new Date(value).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    @TypeConverter
+    public static Long dateTimeToTimestamp(LocalDateTime date) {
+        return date == null ? null : Date.from(date.atZone(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
     @TypeConverter

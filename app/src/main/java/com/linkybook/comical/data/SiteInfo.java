@@ -33,11 +33,14 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.JsonAdapter;
 import com.linkybook.comical.data.serializers.BitmapSerializer;
 import com.linkybook.comical.data.serializers.LocalDateSerializer;
+import com.linkybook.comical.data.serializers.LocalDateTimeSerializer;
 import com.linkybook.comical.utils.Orientation;
 import com.linkybook.comical.utils.Status;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -61,8 +64,8 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public LocalDate lastVisit = LocalDate.now();
 
     @ColumnInfo(name = "decay_date")
-    @JsonAdapter(LocalDateSerializer.class)
-    public LocalDate decayDate = LocalDate.now();
+    @JsonAdapter(LocalDateTimeSerializer.class)
+    public LocalDateTime decayDate = LocalDateTime.now();
 
     public boolean backlog = false;
     public boolean favorite = false;
@@ -126,6 +129,18 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         }
         score += visitValue;
 
+        this.lastVisit = LocalDate.now();
+        // We've changed the page, hiatus must be over?
+        this.hiatus = false;
+        this.setScore(score);
+    }
+
+    public double getScore() {
+        double seconds = LocalDateTime.now().until(this.decayDate, ChronoUnit.SECONDS);
+        return Math.exp(lambda * seconds / 60 / 60 / 24);
+    }
+
+    public void setScore(double score) {
         if (this.backlog) {
             // clamp backlog lower
             score = Math.min(score, 150);
@@ -134,19 +149,10 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
             score = Math.min(score, 250);
         }
 
-        this.lastVisit = LocalDate.now();
-        // We've changed the page, hiatus must be over?
-        this.hiatus = false;
-        this.setScore(score);
-    }
-
-    public double getScore() {
-        return Math.exp(lambda * LocalDate.now().until(this.decayDate, ChronoUnit.DAYS));
-    }
-
-    public void setScore(double score) {
         // Render score back to time-to-score-one
-        this.decayDate = this.lastVisit.plusDays((int) (Math.log(score) / lambda));
+        double seconds = Math.log(score) / lambda * 24 * 60 * 60;
+        Duration duration = Duration.ofSeconds((long) seconds);
+        this.decayDate = LocalDateTime.now().plus(duration);
     }
 
     // Parcelable methods

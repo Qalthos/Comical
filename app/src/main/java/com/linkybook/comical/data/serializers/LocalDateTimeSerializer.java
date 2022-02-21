@@ -27,16 +27,16 @@ import com.google.gson.JsonSerializer;
 import com.linkybook.comical.data.Converters;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class LocalDateSerializer implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+public class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     @Override
-    public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
-        return new JsonPrimitive(Converters.dateToTimestamp(src));
+    public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(Converters.dateTimeToTimestamp(src));
     }
 
     @Override
-    public LocalDate deserialize(JsonElement src, Type typeOfSrc, JsonDeserializationContext context) {
-        return Converters.timestampToDate(src.getAsLong());
+    public LocalDateTime deserialize(JsonElement src, Type typeOfSrc, JsonDeserializationContext context) {
+        return Converters.timestampToDateTime(src.getAsLong());
     }
 }
