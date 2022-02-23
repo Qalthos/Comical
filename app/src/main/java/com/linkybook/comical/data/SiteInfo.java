@@ -117,7 +117,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public void visit() {
         double score = this.getScore();
 
-        double visitValue = 2;
+        double visitValue = 1;
         if (this.favorite) {
             visitValue *= 2;
         }
@@ -125,7 +125,9 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         int weekly = decodeUpdates(this.update_schedule).size();
         // Defined updates are valuable, but try to normalize impact
         if (weekly > 0) {
-            visitValue *= 7.0 / weekly;
+            visitValue *= 2.0 / weekly;
+        } else {
+            visitValue /= 7;
         }
         score += visitValue;
 
@@ -144,9 +146,6 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         if (this.backlog) {
             // clamp backlog lower
             score = Math.min(score, 150);
-        } else {
-            // clamp everything else higher
-            score = Math.min(score, 250);
         }
 
         // Render score back to time-to-score-one
