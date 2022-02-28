@@ -54,7 +54,6 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     public String name;
     public String url;
-    private static final double lambda = Math.log(2) / 30;
 
     @JsonAdapter(BitmapSerializer.class)
     public Bitmap favicon;
@@ -139,7 +138,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
 
     public double getScore() {
         double seconds = LocalDateTime.now().until(this.decayDate, ChronoUnit.SECONDS);
-        return Math.exp(lambda * seconds / 60 / 60 / 24);
+        return Math.pow(2, seconds / 2592000);
     }
 
     public void setScore(double score) {
@@ -149,7 +148,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         }
 
         // Render score back to time-to-score-one
-        double seconds = Math.log(score) / lambda * 24 * 60 * 60;
+        double seconds = Math.log(score) * 2592000 / Math.log(2);
         Duration duration = Duration.ofSeconds((long) seconds);
         this.decayDate = LocalDateTime.now().plus(duration);
     }
