@@ -23,6 +23,7 @@ import static com.linkybook.comical.utils.Schedule.decodeUpdates;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -126,6 +127,8 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         if (weekly > 0) {
             visitValue *= 2.0 / weekly;
         }
+
+        Log.d("score", String.format("Visit was worth %f points", visitValue));
         score += visitValue;
 
         this.lastVisit = LocalDate.now();
@@ -149,6 +152,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         double seconds = Math.log(score) * 2592000 / Math.log(2);
         Duration duration = Duration.ofSeconds((long) seconds);
         this.decayDate = LocalDateTime.now().plus(duration);
+        Log.d("score", String.format("New score: %f", this.getScore()));
     }
 
     // Parcelable methods

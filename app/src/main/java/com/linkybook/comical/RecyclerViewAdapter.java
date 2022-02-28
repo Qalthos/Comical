@@ -56,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.updates.setText("");
         }
 
-        holder.score.setText(String.valueOf(site.getScore()));
+        holder.score.setText(String.format("%.1f", site.getScore()));
 
         String flags = "";
         switch (site.hasNewProbably()) {
