@@ -82,7 +82,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         if (this.hiatus) {
             return Status.hiatus;
         } else if (this.backlog) {
-            return Status.backlog;
+            return Status.unread;
         }
         LocalDate now = LocalDate.now();
         LocalDate testDate = this.lastVisit;

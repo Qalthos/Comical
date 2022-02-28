@@ -60,9 +60,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         String flags = "";
         switch (site.hasNewProbably()) {
-            case backlog:
-                flags += "⏩";
-                break;
             case hiatus:
                 flags += "⌛";
                 break;
@@ -75,6 +72,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             case unread:
                 flags += "🆕";
                 break;
+        }
+        if (site.backlog) {
+            flags += "⏩";
         }
         if (site.favorite) {
             flags += "♥";
