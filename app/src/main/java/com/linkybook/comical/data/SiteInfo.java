@@ -118,6 +118,9 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         double score = this.getScore();
 
         double visitValue = 1;
+        if (!this.backlog) {
+            visitValue *= 2;
+        }
         if (this.favorite) {
             visitValue *= 2;
         }
