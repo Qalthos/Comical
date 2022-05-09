@@ -26,7 +26,7 @@
         android:visible="false"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_hiatus"
+        android:id="@+id/action_newness"
         android:icon="@android:drawable/ic_menu_recent_history"
         android:title="@string/hiatus"
         android:visible="false"

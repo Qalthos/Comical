@@ -20,6 +20,7 @@ package com.linkybook.comical.views;
 
 import static com.linkybook.comical.utils.URL.urlDomain;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -44,6 +45,9 @@ import com.linkybook.comical.R;
 import com.linkybook.comical.SiteViewModel;
 import com.linkybook.comical.data.SiteInfo;
 import com.linkybook.comical.utils.Orientation;
+import com.linkybook.comical.utils.Status;
+
+import java.time.LocalDate;
 
 public class WebViewActivity extends AppCompatActivity {
     private SiteViewModel svm;
@@ -54,6 +58,7 @@ public class WebViewActivity extends AppCompatActivity {
     private SwipeRefreshLayout srl;
     private WebView mainView;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,12 +130,21 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.web_menu, menu);
+        MenuItem newness = menu.findItem(R.id.action_newness);
 
         if(WebViewActivity.this.currentSite.favorite) {
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_favorite_black_24dp);
         }
         menu.findItem(R.id.action_backlog).setVisible(WebViewActivity.this.currentSite.backlog);
-        menu.findItem(R.id.action_hiatus).setVisible(WebViewActivity.this.currentSite.hiatus);
+        if(this.currentSite.hiatus) {
+            newness.setVisible(true);
+            newness.setIcon(android.R.drawable.ic_menu_recent_history);
+        } else if(this.currentSite.hasNewProbably().compareTo(Status.limbo) >= 0 && !this.currentSite.backlog) {
+            newness.setVisible(true);
+            newness.setIcon(android.R.drawable.ic_menu_view);
+        } else {
+            newness.setVisible(false);
+        }
 
         MenuItem shareItem = menu.findItem(R.id.action_share);
         share = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
@@ -153,8 +167,12 @@ public class WebViewActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_backlog) {
             site.backlog = false;
             item.setVisible(false);
-        } else if (item.getItemId() == R.id.action_hiatus) {
-            site.hiatus = false;
+        } else if (item.getItemId() == R.id.action_newness) {
+            if (site.hiatus) {
+                site.hiatus = false;
+            } else {
+                site.lastVisit = LocalDate.now();
+            }
             item.setVisible(false);
         } else {
             return super.onOptionsItemSelected(item);
