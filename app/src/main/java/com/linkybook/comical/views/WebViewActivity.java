@@ -139,7 +139,7 @@ public class WebViewActivity extends AppCompatActivity {
         if(this.currentSite.hiatus) {
             newness.setVisible(true);
             newness.setIcon(android.R.drawable.ic_menu_recent_history);
-        } else if(this.currentSite.hasNewProbably().compareTo(Status.limbo) >= 0 && !this.currentSite.backlog) {
+        } else if(this.currentSite.hasNewProbably().compareTo(Status.maybe) >= 0 && !this.currentSite.backlog) {
             newness.setVisible(true);
             newness.setIcon(android.R.drawable.ic_menu_view);
         } else {

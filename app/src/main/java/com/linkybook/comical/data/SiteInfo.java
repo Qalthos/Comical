@@ -83,16 +83,10 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         if (this.hiatus) {
             return Status.hiatus;
         } else if (this.backlog) {
-            return Status.unread;
+            return Status.backlog;
         }
         LocalDate now = LocalDate.now();
         LocalDate testDate = this.lastVisit;
-        if (testDate.until(now).toTotalMonths() > 0) {
-            return Status.ignored;
-        }
-        if (testDate.until(now).getDays() > 14) {
-            return Status.limbo;
-        }
         if (this.update_schedule > 0) {
             while (testDate.compareTo(now) < 0) {
                 testDate = testDate.plus(Period.ofDays(1));
@@ -101,14 +95,20 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
                 }
             }
         }
+        if (testDate.until(now).toTotalMonths() > 0) {
+            return Status.ignored;
+        }
+        if (testDate.until(now).getDays() > 7) {
+            return Status.maybe;
+        }
         return Status.read;
     }
 
     @Override
     public int compareTo(SiteInfo other) {
         // Return reverse sorted list by decayDate
-        int newness;
-        if ((newness = other.hasNewProbably().compareTo(this.hasNewProbably())) != 0) {
+        int newness = other.hasNewProbably().compareTo(this.hasNewProbably());
+        if (newness != 0) {
             return newness;
         }
         return -this.decayDate.compareTo(other.decayDate);

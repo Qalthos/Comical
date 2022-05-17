@@ -22,6 +22,7 @@ public enum Status {
     hiatus,
     ignored,
     read,
-    limbo,
+    maybe,
+    backlog,
     unread,
 }

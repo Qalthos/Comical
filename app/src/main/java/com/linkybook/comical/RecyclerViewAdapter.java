@@ -66,15 +66,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             case ignored:
                 flags += "\uD83D\uDCA4";
                 break;
-            case limbo:
+            case maybe:
                 flags += "🆕?";
+                break;
+            case backlog:
+                flags += "⏩";
                 break;
             case unread:
                 flags += "🆕";
                 break;
-        }
-        if (site.backlog) {
-            flags += "⏩";
         }
         if (site.favorite) {
             flags += "♥";
