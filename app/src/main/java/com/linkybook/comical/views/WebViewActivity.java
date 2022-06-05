@@ -24,6 +24,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ShareActionProvider;
@@ -86,18 +88,30 @@ public class WebViewActivity extends AppCompatActivity {
         mainView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         mainView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(android.webkit.WebView view, WebResourceRequest wrq) {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                final Uri uri = Uri.parse(url);
+                return handleUri(view, uri);
+            }
+
+            @RequiresApi(Build.VERSION_CODES.N)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                final Uri uri = request.getUrl();
+                return handleUri(view, uri);
+            }
+
+            public boolean handleUri(android.webkit.WebView view, Uri uri) {
                 String currentDomain = urlDomain(currentSite.url);
-                String prospectDomain = urlDomain(wrq.getUrl());
+                String prospectDomain = urlDomain(uri);
                 if(prospectDomain.equals(currentDomain)) {
-                    currentSite.url = wrq.getUrl().toString();
+                    currentSite.url = uri.toString();
                     currentSite.favicon = view.getFavicon();
                     currentSite.visit();
                     WebViewActivity.this.svm.addOrUpdateSite(currentSite);
                     loadUrl();
                 } else {
                     // Let the browser handle it.
-                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(wrq.getUrl().toString())));
+                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 }
 
                 return true;
