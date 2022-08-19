@@ -9,6 +9,7 @@ import androidx.room.TypeConverter;
 import com.linkybook.comical.utils.Orientation;
 
 import java.io.ByteArrayOutputStream;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -50,6 +51,16 @@ public class Converters {
     @TypeConverter
     public static Long dateTimeToTimestamp(LocalDateTime date) {
         return date == null ? null : Date.from(date.atZone(ZoneId.systemDefault()).toInstant()).getTime();
+    }
+
+    @TypeConverter
+    public static Instant timestampToInstant(Long value) {
+        return value == null ? null : Instant.ofEpochMilli(value);
+    }
+
+    @TypeConverter
+    public static Long instantToTimestamp(Instant inst) {
+        return inst == null ? null : inst.toEpochMilli();
     }
 
     @TypeConverter

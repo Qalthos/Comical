@@ -33,15 +33,15 @@ import androidx.room.PrimaryKey;
 import com.google.gson.Gson;
 import com.google.gson.annotations.JsonAdapter;
 import com.linkybook.comical.data.serializers.BitmapSerializer;
+import com.linkybook.comical.data.serializers.InstantSerializer;
 import com.linkybook.comical.data.serializers.LocalDateSerializer;
-import com.linkybook.comical.data.serializers.LocalDateTimeSerializer;
 import com.linkybook.comical.utils.Orientation;
 import com.linkybook.comical.utils.Status;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -64,8 +64,8 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     public LocalDate lastVisit = LocalDate.now();
 
     @ColumnInfo(name = "decay_date")
-    @JsonAdapter(LocalDateTimeSerializer.class)
-    public LocalDateTime decayDate = LocalDateTime.now();
+    @JsonAdapter(InstantSerializer.class)
+    public Instant decayDate = Instant.now();
 
     public boolean backlog = false;
     public boolean favorite = false;
@@ -141,7 +141,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
     }
 
     public double getScore() {
-        double seconds = LocalDateTime.now().until(this.decayDate, ChronoUnit.SECONDS);
+        double seconds = Instant.now().until(this.decayDate, ChronoUnit.SECONDS);
         return Math.pow(2, seconds / 2592000);
     }
 
@@ -154,7 +154,7 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
         // Render score back to time-to-score-one
         double seconds = Math.log(score) * 2592000 / Math.log(2);
         Duration duration = Duration.ofSeconds((long) seconds);
-        this.decayDate = LocalDateTime.now().plus(duration);
+        this.decayDate = Instant.now().plus(duration);
         Log.d("score", String.format("New score: %f", this.getScore()));
     }
 
