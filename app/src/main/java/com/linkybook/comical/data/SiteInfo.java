@@ -95,9 +95,6 @@ public class SiteInfo implements Parcelable, Comparable<SiteInfo> {
                 }
             }
         }
-        if (testDate.until(now).toTotalMonths() > 0) {
-            return Status.ignored;
-        }
         if (testDate.until(now).getDays() > 7) {
             return Status.maybe;
         }

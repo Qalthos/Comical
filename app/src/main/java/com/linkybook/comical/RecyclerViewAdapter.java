@@ -63,9 +63,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             case hiatus:
                 flags += "⌛";
                 break;
-            case ignored:
-                flags += "\uD83D\uDCA4";
-                break;
             case maybe:
                 flags += "🆕?";
                 break;

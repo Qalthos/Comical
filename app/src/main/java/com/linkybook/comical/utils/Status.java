@@ -19,10 +19,9 @@
 package com.linkybook.comical.utils;
 
 public enum Status {
-    hiatus,
-    ignored,
     read,
-    maybe,
+    hiatus,
     backlog,
+    maybe,
     unread,
 }
