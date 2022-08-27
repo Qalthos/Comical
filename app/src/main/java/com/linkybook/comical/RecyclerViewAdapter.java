@@ -19,6 +19,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
@@ -57,7 +58,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.updates.setText("");
         }
 
-        holder.score.setText(String.format("%.1f", site.getScore()));
+        holder.score.setVisibility(View.VISIBLE);
+        holder.score.setText(String.format(Locale.getDefault(), "%.1f", site.getScore()));
 
         String flags = "";
         switch (site.hasNewProbably()) {
