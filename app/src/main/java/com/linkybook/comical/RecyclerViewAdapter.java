@@ -1,6 +1,7 @@
 package com.linkybook.comical;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         SiteInfo site = siteList.get(position);
         holder.name.setText(site.name);
         holder.url.setText(site.url);
-        holder.icon.setImageBitmap(site.favicon);
+        holder.setIcon(site.favicon);
 
         ArrayList<DayOfWeek> schedule = site.schedule();
         if (site.update_schedule > 0) {
@@ -78,21 +79,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         holder.flags.setText(flags);
 
-        if (site.favicon != null) {
-            Palette.Builder pb = Palette.from(site.favicon);
-            pb.addTarget(Target.VIBRANT);
-            Palette p = pb.generate();
-            Palette.Swatch color = p.getDominantSwatch();
-
-            if (color != null) {
-                holder.name.setTextColor(color.getTitleTextColor());
-                holder.flags.setTextColor(color.getBodyTextColor());
-                holder.score.setTextColor(color.getBodyTextColor());
-                holder.url.setTextColor(color.getBodyTextColor());
-                holder.updates.setTextColor(color.getBodyTextColor());
-                holder.itemView.setBackgroundColor(color.getRgb());
-            }
-        }
         switch (site.orientation) {
             case ANY:
                 holder.rotation.setImageResource(R.drawable.ic_baseline_screen_rotation_24);
@@ -140,6 +126,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             icon = view.findViewById(R.id.card_icon);
             updates = view.findViewById(R.id.card_updates);
             rotation = view.findViewById(R.id.card_rotation);
+        }
+
+        public void setIcon(Bitmap bitmap) {
+            Palette.Swatch color = null;
+            if (bitmap != null) {
+                bitmap = Bitmap.createScaledBitmap(bitmap, 64, 64, false);
+                this.icon.setImageBitmap(bitmap);
+                Palette.Builder pb = Palette.from(bitmap);
+                pb.addTarget(Target.VIBRANT);
+                color = pb.generate().getDominantSwatch();
+            } else {
+                this.icon.setImageResource(R.mipmap.ic_launcher);
+            }
+            if (color == null) {
+                color = new Palette.Swatch(-11684180, 1);
+            }
+            this.name.setTextColor(color.getTitleTextColor());
+            this.flags.setTextColor(color.getBodyTextColor());
+            this.score.setTextColor(color.getBodyTextColor());
+            this.url.setTextColor(color.getBodyTextColor());
+            this.updates.setTextColor(color.getBodyTextColor());
+            this.itemView.setBackgroundColor(color.getRgb());
         }
     }
 }

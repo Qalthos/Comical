@@ -23,6 +23,7 @@ import static com.linkybook.comical.utils.URL.urlDomain;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -105,7 +106,6 @@ public class WebViewActivity extends AppCompatActivity {
                 String prospectDomain = urlDomain(uri);
                 if(prospectDomain.equals(currentDomain)) {
                     currentSite.url = uri.toString();
-                    currentSite.favicon = view.getFavicon();
                     currentSite.visit();
                     WebViewActivity.this.svm.addOrUpdateSite(currentSite);
                     loadUrl();
@@ -127,6 +127,7 @@ public class WebViewActivity extends AppCompatActivity {
         });
 
         mainView.setWebChromeClient(new WebChromeClient() {
+            @Override
             public void onProgressChanged(android.webkit.WebView view, int progress) {
                 progressBar.setProgress(progress);
 
@@ -134,6 +135,14 @@ public class WebViewActivity extends AppCompatActivity {
                     progressBar.setVisibility(ProgressBar.VISIBLE);
                 } else if(progress == 100) {
                     progressBar.setVisibility(ProgressBar.GONE);
+                }
+            }
+
+            @Override
+            public void onReceivedIcon(WebView view, Bitmap icon) {
+                super.onReceivedIcon(view, icon);
+                if(icon != null) {
+                    currentSite.favicon = icon;
                 }
             }
         });
